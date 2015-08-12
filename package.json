@@ -1,0 +1,38 @@
+{
+  "name": "swagger-device-generator",
+  "version": "1.0.0",
+  "description": "Generate Meshblu devices from swagger files",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octoblu/swagger-device-generator.git"
+  },
+  "keywords": [
+    "meshblu",
+    "iot",
+    "swagger",
+    "octoblu",
+    "api"
+  ],
+  "author": "redaphid",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/octoblu/swagger-device-generator/issues"
+  },
+  "homepage": "https://github.com/octoblu/swagger-device-generator#readme",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "coffee-script": "^1.9.3",
+    "mocha": "^2.2.5",
+    "sinon": "^1.15.4",
+    "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "swagger-parser": "^2.5.0",
+    "swagger-tools": "^0.9.2",
+    "when": "^3.7.3"
+  }
+}
