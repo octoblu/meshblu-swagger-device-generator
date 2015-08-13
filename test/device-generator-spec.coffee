@@ -32,7 +32,6 @@ describe 'DeviceGenerator', ->
           expect(@result.type).to.equal 'object'
         
         it 'should return the subschema enumeration', ->
-          console.log( 'result:', JSON.stringify @result)
           expect(@result.properties.subschema).to.deep.equal(
             type: 'string'
             enum: ["helloSubject"]
@@ -49,8 +48,14 @@ describe 'DeviceGenerator', ->
           @sut.toMessageSchema (@error, @result) => done()
         
         it 'should return the subschema enumeration', ->
-          expect(@result.properties.subschema).to.deep.equal(
-            type: 'string'
-            enum: [ 'getAllPets', 'createPet', 'deletePet', 'getPetById' ]
-          )
+          expect(@result.properties.subschema.type).to.equal 'string'
+          expect(@result.properties.subschema.enum).to.deep.equal [ 'getAllPets', 'createPet', 'deletePet', 'getPetById' ]            
+        
+        it.only 'should return the correct properties for getAllPets', ->
+          getAllPetsProperties = 
+              type: "object"
+              properties:                 
+                status: 
+                  type: "string"                
+          expect(@result.properties.getAllPets).to.deep.equal getAllPetsProperties
       
