@@ -34,9 +34,10 @@ describe 'Swagger2ToMessageSchema', ->
         it 'should return the appropriate json schema property', ->
           expect(@result).to.deep.equal(
               type: 'object'
+              description: 'Finds all pets in the system'
               properties:
                 status:
-                  type: "string"
+                  type: 'string'
                   description: 'The status to filter by'
           )
 

@@ -30,9 +30,10 @@ describe 'DeviceGenerator', ->
         it 'should return the correct properties for getAllPets', ->
           getAllPetsProperties =
               type: "object"
+              description: 'Finds all pets in the system'
               properties:
                 status:
                   type: "string"
                   description: "The status to filter by"
-                  
+
           expect(@result.properties.getAllPets).to.deep.equal getAllPetsProperties

@@ -37,6 +37,7 @@ class Swagger2ToMessageSchema
 
   getActionProperties: (pathAction) =>
     actionProperties = type: "object"
+    actionProperties.description = pathAction.summary
 
     actionProperties.properties = @getPropertiesFromParameters pathAction.parameters if pathAction.parameters?
 
