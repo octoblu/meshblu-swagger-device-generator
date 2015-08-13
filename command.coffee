@@ -4,6 +4,7 @@ fs = require 'fs'
 _  = require 'lodash'
 commander = require 'commander'
 debug = require('debug')('device-generator:cli')
+DeviceGenerator = require './device-generator'
 
 commander
   .version 1.0
@@ -14,7 +15,18 @@ commander
   # .option '-a, --all',  'generate all json files related to proxy devices'
   .parse process.argv
 
+
 commander.help() unless commander.args[0]?
+
+swaggerPath = commander.args[0]
+
+generator = new DeviceGenerator commander.args[0]
+
+if commander.messageSchema?
+  messageSchemaPath = commander.messageSchema
+  generator.toMessageSchema (error, messageSchema) =>
+    return console.error error.message if error?
+    fs.writeFileSync messageSchemaPath, JSON.stringify(messageSchema, null, 2)
 
 # channel = JSON.parse fs.readFileSync(commander.infile)
 
