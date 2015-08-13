@@ -53,15 +53,14 @@ class Swagger2ToMessageSchema
     fixedSchemaProperty = _.cloneDeep schemaProperty
 
     if fixedSchemaProperty.items?
-      console.log 'I HAVE ITEMS!!!', JSON.stringify fixedSchemaProperty, null, 2
       fixedSchemaProperty.items = @fixSchemaProperty fixedSchemaProperty.items
+      delete fixedSchemaProperty.required
 
     if fixedSchemaProperty.properties?
       fixedSchemaProperty.type = 'object' unless fixedSchemaProperty.type?
       fixedSchemaProperty.properties = @fixSchemaProperties schemaProperty.properties
       delete fixedSchemaProperty.required
 
-    console.log JSON.stringify fixedSchemaProperty, null, 2
     fixedSchemaProperty
 
   getPropertiesFromParameters: (parameters) =>
