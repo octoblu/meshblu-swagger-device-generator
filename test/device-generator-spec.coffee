@@ -34,4 +34,5 @@ describe 'DeviceGenerator', ->
                 status:
                   type: "string"
                   description: "The status to filter by"
+                  
           expect(@result.properties.getAllPets).to.deep.equal getAllPetsProperties

@@ -1,5 +1,4 @@
 Swagger2ToMessageSchema = require '../swagger-2-to-message-schema.coffee'
-fs = require 'fs'
 describe 'Swagger2ToMessageSchema', ->
   it 'should exist', ->
     expect(Swagger2ToMessageSchema).to.exist
