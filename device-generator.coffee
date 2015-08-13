@@ -1,14 +1,16 @@
-When      = require 'when'
-WhenNode  = require 'when/node'
-swagger1 = require('swagger-tools').specs.v1
+_ = require 'lodash'
+swagger2 = require('swagger-tools').specs.v2
+Swagger2ToMessageSchema = require './swagger-2-to-message-schema'
+
 class DeviceGenerator
   constructor: (@swaggerFilePath) ->
     
-  toMessageSchema: =>
-    swaggerFile = require @swaggerFilePath        
-    return @helloSchema if swaggerFile.swaggerVersion == "1.2"
-    swagger1.resolve swaggerFile, (err, result)=>
-      console.log err, result
+  toMessageSchema: (callback) =>    
+      swaggerFile = require @swaggerFilePath        
+      return callback null, @helloSchema if swaggerFile.swaggerVersion == "1.2"
+      swagger2.resolve swaggerFile, (error, result) =>        
+        return callback error if error?        
+        callback null, properties: subschema: @getActions result
   
   helloSchema: 
     type: 'object'
@@ -19,7 +21,14 @@ class DeviceGenerator
           'helloSubject'
         ]    
         
-  parseSwaggerFile: =>
+  getActionsForV2: (swaggerFile) =>
+    actions = []    
+    _.each swaggerFile.paths, (path) =>
+      _.each path, (pathAction, pathActionName) =>        
+        return if pathActionName == 'parameters'
+        actions.push pathAction.operationId
+        
+    actions      
     
     
        

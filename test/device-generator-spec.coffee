@@ -7,23 +7,23 @@ describe 'DeviceGenerator', ->
   describe 'constructor', ->
     describe 'when called with a path to a swagger file', ->
       beforeEach ->      
-        @sut = new DeviceGenerator './swagger/hello-world-swagger.json'            
+        @sut = new DeviceGenerator './test/swagger/hello-world-swagger.json'            
       
       it 'should exist', ->
         expect(@sut).to.exist
   
   describe '.toMessageSchema ->', ->
-    describe.only 'when DeviceGenerator is called with hello-world-swagger', ->
+    describe 'when DeviceGenerator is called with hello-world-swagger', ->
     
       beforeEach ->
-        @sut = new DeviceGenerator './swagger/hello-world-swagger.json'
+        @sut = new DeviceGenerator './test/swagger/hello-world-swagger.json'
       
       it 'should exist', ->
         expect(@sut.toMessageSchema).to.exist
       
-      describe.only 'when called', ->
-        beforeEach ->
-          @result = @sut.toMessageSchema()
+      describe 'when called', ->
+        beforeEach (done) ->
+          @sut.toMessageSchema (@error, @result) => done()
           
         it 'should return an object', ->
           expect(@result).to.exist
@@ -38,6 +38,19 @@ describe 'DeviceGenerator', ->
             enum: ["helloSubject"]
           )
           
-    xdescribe 'when DeviceGenerator is called with pet-store v2.0', ->    
+    describe 'when DeviceGenerator is called with pet-store v2.0', ->  
+        
       beforeEach ->
-        @sut = new DeviceGenerator './swagger/pet-store-2-0.json'
+        @sut = new DeviceGenerator './test/swagger/pet-store-2-0-swagger.json'
+      
+      describe 'when called', ->
+        
+        beforeEach (done) ->
+          @sut.toMessageSchema (@error, @result) => done()
+        
+        it 'should return the subschema enumeration', ->
+          expect(@result.properties.subschema).to.deep.equal(
+            type: 'string'
+            enum: [ 'getAllPets', 'createPet', 'deletePet', 'getPetById' ]
+          )
+      
