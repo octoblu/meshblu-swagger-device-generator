@@ -77,7 +77,7 @@ class MessageSchemaToForm
 
   getForm: (properties) =>
     _.map properties.subschema.enum, (action) =>
-      @getFormForProperty properties[action]
+      @getFormForAction properties[action]
 
   getFormForAction: (name, action) =>
     actionForm = [
@@ -86,10 +86,12 @@ class MessageSchemaToForm
       type: 'hidden'
     ]
     actionForm.concat _.map action.properties, (actionProperty, actionPropertyName) =>
-      {
+      actionPropertyForm =
         key: "#{name}.#{actionPropertyName}"
-        title: actionProperty.description
         condition: "model.subschema === '#{name}'"
-      }
+
+      actionPropertyForm.title = actionProperty.description if actionProperty.description?
+      actionPropertyForm
+
 
 module.exports = MessageSchemaToForm
