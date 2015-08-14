@@ -21,8 +21,11 @@ class Swagger2ToMessageSchema
         @actionIndex[pathAction.operationId] = pathAction
 
   generateMessageSchemas: =>
-    _.map @actionIndex, (pathAction, actionName) =>
-        @generateMessageSchema actionName, pathAction
+    messageSchemas = title: @swagger?.info?.title || 'root'
+    _.each @actionIndex, (pathAction, actionName) =>
+        messageSchemas[actionName] = @generateMessageSchema actionName, pathAction
+        
+    messageSchemas
 
   getActions: =>
     _.keys @actionIndex
