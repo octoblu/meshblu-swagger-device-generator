@@ -30,6 +30,6 @@ if commander.messageSchema?
 
 if commander.form?
   formPath = commander.form
-  generator.toForm (error, form) =>
+  generator.toForm swaggerPath, (error, form) =>
     return console.error error.message if error?
     fs.writeFileSync formPath, JSON.stringify(form, null, 2)

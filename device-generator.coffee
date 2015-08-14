@@ -4,6 +4,7 @@ MessageSchemaToForm = require './message-schema-to-form'
 
 class DeviceGenerator
   toMessageSchema: (filePath, callback=->) =>
+      console.error 'YOU NEED TO CHANGE THE DEVICE EDITOR TO SHOW A SUBSET OF THE SCHEMA FOR REQUIRED, PAYLOAD ISSUES'
       swaggerFile = require filePath
       swaggerTransformer = new Swagger2ToMessageSchema swaggerFile
       swaggerTransformer.init (error) =>
@@ -11,6 +12,7 @@ class DeviceGenerator
         callback null, swaggerTransformer.transform()
 
   toForm: (filePath, callback=->) =>
+    console.error 'YOU NEED TO CHANGE THE DEVICE EDITOR TO SHOW A SUBSET OF THE SCHEMA FOR REQUIRED, PAYLOAD ISSUES'
     @toMessageSchema filePath, (error, messageSchema) =>
       return callback error if error?
       messageSchemaTransformer = new MessageSchemaToForm
