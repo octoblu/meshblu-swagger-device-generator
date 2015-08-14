@@ -30,23 +30,35 @@ describe 'DeviceGenerator', ->
             title: "getAllPets"
             description: 'Finds all pets in the system'
             properties:
-              status:
-                type: "string"
-                description: "The status to filter by"
+              action:
+                type: 'string'
+                default: 'getAllPets'
+              options:
+                type: 'object'
+                properties:
+                  status:
+                    type: "string"
+                    description: "The status to filter by"
         getAllPetsSchema = _.findWhere @result, title: 'getAllPets'
         expect(getAllPetsSchema).to.deep.equal getAllPetsProperties
 
       it 'should return the correct properties for getPetById', ->
-        getAllPetsProperties =
+        getPetByIdProperties =
             type: "object"
             title: "getAllPets"
             description: 'Finds all pets in the system'
             properties:
-              status:
-                type: "string"
-                description: "The status to filter by"
+              action:
+                type: 'string'
+                default: 'getAllPets'
+              options:
+                type: 'object'
+                properties:
+                  status:
+                    type: "string"
+                    description: "The status to filter by"
         getAllPetsSchema = _.findWhere @result, title: 'getAllPets'
-        expect(getAllPetsSchema).to.deep.equal getAllPetsProperties
+        expect(getAllPetsSchema).to.deep.equal getPetByIdProperties
 
   describe '.toForm ->', ->
     describe 'when called with pet-store v2.0', ->

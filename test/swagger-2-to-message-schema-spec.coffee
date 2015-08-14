@@ -47,10 +47,16 @@ describe 'Swagger2ToMessageSchema', ->
               title: 'getPetById'
               description: 'Finds the pet by id'
               properties:
-                id:
-                  type: 'integer'
-                  description: "ID of pet"
-                  required: true
+                action:
+                  type: 'string'
+                  default: 'getPetById'
+                options:
+                  type: "object"
+                  properties:
+                    id:
+                      type: 'integer'
+                      description: "ID of pet"
+                      required: true
           )
 
   describe '.fixSchemaProperty', ->

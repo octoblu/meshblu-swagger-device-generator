@@ -32,8 +32,16 @@ class Swagger2ToMessageSchema
       type: "object"
       title: actionName
       description: pathAction.summary
-    parameters = _.union pathAction.parameters, @pathIndexByAction[actionName].parameters    
-    messageSchema.properties = @getPropertiesFromParameters parameters
+      properties:
+        action:
+          type: "string"
+          default: actionName
+        options:
+          type: "object"
+          properties: []
+
+    parameters = _.union pathAction.parameters, @pathIndexByAction[actionName].parameters
+    messageSchema.properties.options.properties = @getPropertiesFromParameters parameters
 
     messageSchema
 

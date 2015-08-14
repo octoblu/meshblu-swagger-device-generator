@@ -4,9 +4,18 @@
     "title": "getAllPets",
     "description": "Finds all pets in the system",
     "properties": {
-      "status": {
-        "description": "The status to filter by",
-        "type": "string"
+      "action": {
+        "type": "string",
+        "default": "getAllPets"
+      },
+      "options": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "The status to filter by",
+            "type": "string"
+          }
+        }
       }
     }
   },
@@ -15,61 +24,70 @@
     "title": "createPet",
     "description": "Creates a new pet",
     "properties": {
-      "pet": {
-        "description": "The Pet to create",
+      "action": {
+        "type": "string",
+        "default": "createPet"
+      },
+      "options": {
         "type": "object",
         "properties": {
-          "category": {
+          "pet": {
+            "description": "The Pet to create",
+            "type": "object",
             "properties": {
+              "category": {
+                "properties": {
+                  "id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
               "id": {
+                "description": "unique identifier for the pet",
                 "format": "int64",
+                "maximum": 100,
+                "minimum": 0,
                 "type": "integer"
               },
               "name": {
                 "type": "string"
-              }
-            },
-            "type": "object"
-          },
-          "id": {
-            "description": "unique identifier for the pet",
-            "format": "int64",
-            "maximum": 100,
-            "minimum": 0,
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-          "photoUrls": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "status": {
-            "description": "pet status in the store",
-            "enum": [
-              "available",
-              "pending",
-              "sold"
-            ],
-            "type": "string"
-          },
-          "tags": {
-            "items": {
-              "properties": {
-                "id": {
-                  "format": "int64",
-                  "type": "integer"
-                },
-                "name": {
-                  "type": "string"
-                }
               },
-              "type": "object"
-            },
-            "type": "array"
+              "photoUrls": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "status": {
+                "description": "pet status in the store",
+                "enum": [
+                  "available",
+                  "pending",
+                  "sold"
+                ],
+                "type": "string"
+              },
+              "tags": {
+                "items": {
+                  "properties": {
+                    "id": {
+                      "format": "int64",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            }
           }
         }
       }
@@ -79,10 +97,19 @@
     "type": "object",
     "title": "deletePet",
     "properties": {
-      "id": {
-        "description": "ID of pet",
-        "type": "integer",
-        "required": true
+      "action": {
+        "type": "string",
+        "default": "deletePet"
+      },
+      "options": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "ID of pet",
+            "type": "integer",
+            "required": true
+          }
+        }
       }
     }
   },
@@ -91,10 +118,19 @@
     "title": "getPetById",
     "description": "Finds the pet by id",
     "properties": {
-      "id": {
-        "description": "ID of pet",
-        "type": "integer",
-        "required": true
+      "action": {
+        "type": "string",
+        "default": "getPetById"
+      },
+      "options": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "ID of pet",
+            "type": "integer",
+            "required": true
+          }
+        }
       }
     }
   }
