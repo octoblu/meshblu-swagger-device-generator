@@ -37,8 +37,8 @@ describe 'DeviceGenerator', ->
   describe '.toForm ->', ->
     describe 'when called with pet-store v2.0', ->
       beforeEach (done) ->
-        @sut = new DeviceGenerator        
-        @sut.toForm './test/message-schema/pet-store-message-schema.json', (@error, @result) => done()
+        @sut = new DeviceGenerator
+        @sut.toForm './test/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
 
       it 'should return the subschema enumeration', ->
         actionNames = _.pluck @result, 'key'

@@ -11,8 +11,10 @@ class DeviceGenerator
         callback null, swaggerTransformer.transform()
 
   toForm: (filePath, callback=->) =>
-      messageSchemaFile = require filePath
+    @toMessageSchema filePath, (error, messageSchema) =>
+      return callback error if error?
       messageSchemaTransformer = new MessageSchemaToForm
-      _.defer => callback null, messageSchemaTransformer.transform messageSchemaFile
+      form = messageSchemaTransformer.transform messageSchema
+      callback null, form
 
 module.exports = DeviceGenerator

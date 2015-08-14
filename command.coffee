@@ -20,11 +20,11 @@ commander.help() unless commander.args[0]?
 
 swaggerPath = commander.args[0]
 
-generator = new DeviceGenerator commander.args[0]
+generator = new DeviceGenerator
 
 if commander.messageSchema?
   messageSchemaPath = commander.messageSchema
-  generator.toMessageSchema (error, messageSchema) =>
+  generator.toMessageSchema swaggerPath, (error, messageSchema) =>
     return console.error error.message if error?
     fs.writeFileSync messageSchemaPath, JSON.stringify(messageSchema, null, 2)
 
