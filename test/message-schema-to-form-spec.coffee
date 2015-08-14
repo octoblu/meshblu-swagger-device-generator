@@ -72,7 +72,7 @@ describe 'MessageSchemaToForm', ->
         ]
 
   describe '.getFormForAction ->', ->
-    describe 'when called with a name and a property', ->
+    describe 'when called with a name and a simple action', ->
       beforeEach ->
         property =
           type: "object"
@@ -84,7 +84,7 @@ describe 'MessageSchemaToForm', ->
 
         @result = @sut.getFormForAction "getAllPets", property
 
-      it 'should return the form for that property', ->
+      it 'should return the form for that action', ->
         propertyForm =  [
           {
             key: 'getAllPets'
@@ -98,6 +98,85 @@ describe 'MessageSchemaToForm', ->
           }
         ]
         expect(@result).to.deep.equal propertyForm
+
+      describe 'when called with a name and a more complex action', ->
+        beforeEach ->
+          property =
+              description: 'The Pet to create'
+              type: 'object'
+              properties:
+                category:
+                  properties:
+                    id:
+                      format: 'int64'
+                      type: 'integer'
+
+                id:
+                  description: 'unique identifier for the pet'
+                  format: 'int64'
+                  maximum: 100
+                  minimum: 0
+                  type: 'integer'
+
+                name:
+                  type: 'string'
+
+                status:
+                  description: 'pet status in the store'
+                  enum: [
+                    'available'
+                    'pending'
+                    'sold'
+                  ]
+                  type: 'string'
+
+                tags:
+                  items:
+                    properties:
+                      id:
+                        format: 'int64'
+                        type: 'integer'
+                      name:
+                        type: 'string'
+                    type: 'object'
+                  type: 'array'
+
+          @result = @sut.getFormForAction 'createPet', property
+
+        it 'should return the form for that action', ->
+          propertyForm =  [
+            {
+              key: 'createPet'
+              notitle: true
+              type: 'hidden'
+            }
+            {
+              key: 'createPet.category'
+              title: 'The status to filter by'
+              condition: 'model.subschema === \'createPet\''
+            }
+            {
+              key: 'createPet.id'
+              title: 'The status to filter by'
+              condition: 'model.subschema === \'createPet\''
+            }
+            {
+              key: 'createPet.name'
+              title: 'The status to filter by'
+              condition: 'model.subschema === \'createPet\''
+            }
+            {
+              key: 'createPet.status'
+              title: 'The status to filter by'
+              condition: 'model.subschema === \'createPet\''
+            }
+            {
+              key: 'createPet.tags'
+              title: 'The status to filter by'
+              condition: 'model.subschema === \'createPet\''
+            }
+          ]
+          expect(@result).to.deep.equal propertyForm
 
   describe '.getSubschemaTitleMap ->', ->
     it 'should exist', ->

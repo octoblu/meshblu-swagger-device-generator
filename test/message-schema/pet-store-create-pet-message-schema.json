@@ -1,0 +1,44 @@
+[
+{
+    "key": "subschema",
+    "title": "Action",
+    "titleMap": [
+      {
+        "value": "getAllPets",
+        "name": "Returns all of your pets."
+      },
+      {
+        "value": "createPet",
+        "name": "Create a pet. You are an all-powerful demigod!"
+      }
+    ]
+  },
+  {
+    "key": "createPet",
+    "notitle": true,
+    "type": "hidden"
+  }, {
+    "key": "createPet.category",
+    "title": "The status to filter by",
+    "condition": "model.subschema === 'createPet'"
+  }, {
+    "key": "createPet.id",
+    "title": "The status to filter by",
+    "condition": "model.subschema === 'createPet'"
+  },
+  {
+    "key": "createPet.name",
+    "title": "The status to filter by",
+    "condition": "model.subschema === 'createPet'"
+  },
+  {
+    "key": "createPet.status",
+    "title": "The status to filter by",
+    "condition": "model.subschema === 'createPet'"
+  },
+  {
+    "key": "createPet.tags",
+    "title": "The status to filter by",
+    "condition": "model.subschema === 'createPet'"
+  }
+]
