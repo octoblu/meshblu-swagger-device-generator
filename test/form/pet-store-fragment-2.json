@@ -1,0 +1,24 @@
+[
+{
+    "key": "subschema",
+    "title": "Action",
+    "titleMap": [
+      {
+        "value": "getAllPets",
+        "name": "Returns all of your pets."
+      },
+      {
+        "value": "createPet",
+        "name": "Create a pet. You are an all-powerful demigod!"
+      }
+    ]
+  },
+  {
+    "key": "createPet",
+    "type": "hidden"
+  },
+  {
+    "key": "createPet.hi",
+    "condition": "model.subschema === 'createPet'"
+  }
+]

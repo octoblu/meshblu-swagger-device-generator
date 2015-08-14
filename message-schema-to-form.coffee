@@ -62,14 +62,9 @@ class ChannelToForm
 
 
 class MessageSchemaToForm
-  transform: =>
-    return [
-      {
-        key: 'subschema'
-        title: 'Action'
-        titleMap: []
-      }
-    ]
+  transform: (messageSchema) =>
+    @getForm messageSchema.properties
+
 
   getSubschemaTitleMap: (properties) =>
     _.map properties.subschema.enum, (action) =>
@@ -79,7 +74,7 @@ class MessageSchemaToForm
     form = []
     _.each properties.subschema.enum, (action) =>
       form = form.concat(@getFormForAction action, properties[action])
-        
+
     form
 
   getFormForAction: (name, action) =>

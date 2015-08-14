@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "properties": {
+    "subschema": {
+      "type": "string",
+      "enum": [
+        "getAllPets",
+        "createPet",
+        "deletePet",
+        "getPetById"
+      ]
+    },
+    "getAllPets": {
+      "type": "object",
+      "description": "Finds all pets in the system",
+      "properties": {
+        "status": {
+          "description": "The status to filter by",
+          "type": "string"
+        }
+      }
+    },
+    "createPet": {
+      "type": "object",
+      "description": "Creates a new pet",
+      "properties": {
+          "hi": {
+              "description": "The Pet to create",
+              "type": "string"
+          }
+      }
+    }
+  }
+}

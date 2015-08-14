@@ -11,19 +11,18 @@ describe 'MessageSchemaToForm', ->
     it 'should exist', ->
       expect(@sut.transform).to.exist
 
-    describe 'when MessageSchemaToForm is constructed with a path', ->
-      describe 'when called', ->
-        beforeEach ->
-          @result = @sut.transform './message-schema/pet-store-message-schema.json'
+    describe 'when called', ->
+      beforeEach ->
+        @getFormOutput = hello: 'hi'
+        @sut.getForm = sinon.stub().returns @getFormOutput
+        @messageSchema = require './message-schema/pet-store-message-schema.json'
+        @result = @sut.transform @messageSchema
 
-        it 'should return an array', ->
-          expect(@result).to.be.an 'array'
+      it 'should return the output from getForm', ->
+        expect(@result).to.equal @getFormOutput
 
-        it 'should return an array that references the subschema', ->
-          subschemaForm = _.findWhere @result, key: 'subschema'
-
-          expect(subschemaForm.title).to.equal 'Action'
-          expect(subschemaForm.titleMap).to.be.an 'array'
+      it 'should call getForm with the schema properties', ->
+        expect(@sut.getForm).to.have.been.calledWith @messageSchema.properties
 
   describe '.getForm ->', ->
     describe 'when called with a message schema', ->
