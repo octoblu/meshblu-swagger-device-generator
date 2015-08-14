@@ -93,7 +93,7 @@ describe 'MessageSchemaToForm', ->
           }
           {
             key: 'getAllPets.status'
-            title: 'the status to filter by'
+            title: 'The status to filter by'
             condition: 'model.subschema === \'getAllPets\''
           }
         ]

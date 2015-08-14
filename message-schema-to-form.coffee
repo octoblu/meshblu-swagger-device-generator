@@ -80,18 +80,16 @@ class MessageSchemaToForm
       @getFormForProperty properties[action]
 
   getFormForAction: (name, action) =>
-    _.map action
-    [
-      {
-        key: 'getAllPets'
-        notitle: true
-        type: 'hidden'
-      }
-      {
-        key: 'getAllPets.status'
-        title: 'the status to filter by'
-        condition: 'model.subschema === \'getAllPets\''
-      }
+    actionForm = [
+      key: name
+      notitle: true
+      type: 'hidden'
     ]
+    actionForm.concat _.map action.properties, (actionProperty, actionPropertyName) =>
+      {
+        key: "#{name}.#{actionPropertyName}"
+        title: actionProperty.description
+        condition: "model.subschema === '#{name}'"
+      }
 
 module.exports = MessageSchemaToForm
