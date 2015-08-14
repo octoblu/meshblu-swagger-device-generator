@@ -1,5 +1,45 @@
 _ = require 'lodash'
 
+class MessageSchemaToForm
+  init: (callback=->)=>
+    _.defer callback
+
+  transform: (messageSchema) =>
+    @getForm messageSchema.properties
+
+  getSubschemaTitleMap: (properties) =>
+    _.map properties.subschema.enum, (action) =>
+      action = value: action, name: properties[action].description
+
+  getForm: (properties) =>    
+    form = [
+      key: 'subschema'
+      title: 'Action'
+      titleMap: @getSubschemaTitleMap properties
+    ]
+    _.each properties.subschema.enum, (action) =>
+      form = form.concat(@getFormForAction action, properties[action])
+
+    form
+
+  getFormForAction: (name, action) =>
+    actionForm = [
+      key: name
+      notitle: true
+      type: 'hidden'
+    ]
+    actionForm.concat _.map action.properties, (actionProperty, actionPropertyName) =>
+      actionPropertyForm =
+        key: "#{name}.#{actionPropertyName}"
+        condition: "model.subschema === '#{name}'"
+
+      actionPropertyForm.title = actionProperty.description if actionProperty.description?
+      actionPropertyForm
+
+
+module.exports = MessageSchemaToForm
+
+#for reference - delete
 class ChannelToForm
   transform: (channel) =>
     return [] unless channel?
@@ -59,37 +99,3 @@ class ChannelToForm
 
   sanitizeParam: (param) =>
     param.replace(/^:/, '')
-
-
-class MessageSchemaToForm
-  transform: (messageSchema) =>
-    @getForm messageSchema.properties
-
-
-  getSubschemaTitleMap: (properties) =>
-    _.map properties.subschema.enum, (action) =>
-      action = value: action, name: properties[action].description
-
-  getForm: (properties) =>
-    form = []
-    _.each properties.subschema.enum, (action) =>
-      form = form.concat(@getFormForAction action, properties[action])
-
-    form
-
-  getFormForAction: (name, action) =>
-    actionForm = [
-      key: name
-      notitle: true
-      type: 'hidden'
-    ]
-    actionForm.concat _.map action.properties, (actionProperty, actionPropertyName) =>
-      actionPropertyForm =
-        key: "#{name}.#{actionPropertyName}"
-        condition: "model.subschema === '#{name}'"
-
-      actionPropertyForm.title = actionProperty.description if actionProperty.description?
-      actionPropertyForm
-
-
-module.exports = MessageSchemaToForm

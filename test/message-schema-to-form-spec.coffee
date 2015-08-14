@@ -65,6 +65,7 @@ describe 'MessageSchemaToForm', ->
       it 'should contain all the actions', ->
         actionNames = _.pluck @result, 'key'
         expect(actionNames).to.contain.all(
+          "subschema"
           "getAllPets"
           "createPet"
           "deletePet"
@@ -72,7 +73,7 @@ describe 'MessageSchemaToForm', ->
         )
 
       it 'should return an array with 6 elements', ->
-        expect(@result.length).to.equal 6
+        expect(@result.length).to.equal 7
 
 
   describe '.getFormForAction ->', ->
