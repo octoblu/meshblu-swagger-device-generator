@@ -1,0 +1,102 @@
+{
+  "type": "object",
+  "properties": {
+    "subschema": {
+      "type": "string",
+      "enum": [
+        "getAllPets",
+        "createPet",
+        "deletePet",
+        "getPetById"
+      ]
+    },
+    "getAllPets": {
+      "type": "object",
+      "description": "Finds all pets in the system",
+      "properties": {
+        "status": {
+          "description": "The status to filter by",
+          "type": "string"
+        }
+      }
+    },
+    "createPet": {
+      "type": "object",
+      "description": "Creates a new pet",
+      "properties": {
+        "pet": {
+          "description": "The Pet to create",
+          "type": "object",
+          "properties": {
+            "category": {
+              "properties": {
+                "id": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "id": {
+              "description": "unique identifier for the pet",
+              "format": "int64",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "photoUrls": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "status": {
+              "description": "pet status in the store",
+              "enum": [
+                "available",
+                "pending",
+                "sold"
+              ],
+              "type": "string"
+            },
+            "tags": {
+              "items": {
+                "properties": {
+                  "id": {
+                    "format": "int64",
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          }
+        }
+      }
+    },
+    "deletePet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID of pet to delete",
+          "type": "integer",
+          "required": true
+        }
+      }
+    },
+    "getPetById": {
+      "type": "object",
+      "description": "Finds the pet by id"
+    }
+  }
+}

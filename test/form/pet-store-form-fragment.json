@@ -1,0 +1,26 @@
+[
+  {
+    "key": "subschema",
+    "title": "Action",
+    "titleMap": [
+      {
+        "value": "getAllPets",
+        "name": "Returns An Array Of Device Objects"
+      },
+      {
+        "value": "createPet",
+        "name": "Post Devices Output"
+      }
+    ]
+  },
+  {
+    "key": "getAllPets",
+    "notitle": true,
+    "type": "hidden"
+  },
+  {
+    "key": "getAllPets.status",
+    "title": "the status to filter by",
+    "condition": "model.subschema === 'getAllPets'"
+  }
+]

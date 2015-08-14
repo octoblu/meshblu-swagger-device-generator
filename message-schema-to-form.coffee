@@ -71,8 +71,27 @@ class MessageSchemaToForm
       }
     ]
 
-  getSubschemaTitleMap: (messageSchema) =>
-    # _.each messageSchema.subschema.enum, (action) =>
-    #   action = value: action, name: 
+  getSubschemaTitleMap: (properties) =>
+    _.map properties.subschema.enum, (action) =>
+      action = value: action, name: properties[action].description
+
+  getForm: (properties) =>
+    _.map properties.subschema.enum, (action) =>
+      @getFormForProperty properties[action]
+
+  getFormForAction: (name, action) =>
+    _.map action
+    [
+      {
+        key: 'getAllPets'
+        notitle: true
+        type: 'hidden'
+      }
+      {
+        key: 'getAllPets.status'
+        title: 'the status to filter by'
+        condition: 'model.subschema === \'getAllPets\''
+      }
+    ]
 
 module.exports = MessageSchemaToForm
