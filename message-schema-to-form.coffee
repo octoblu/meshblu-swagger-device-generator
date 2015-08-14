@@ -76,8 +76,11 @@ class MessageSchemaToForm
       action = value: action, name: properties[action].description
 
   getForm: (properties) =>
-    _.map properties.subschema.enum, (action) =>
-      @getFormForAction properties[action]
+    form = []
+    _.each properties.subschema.enum, (action) =>
+      form = form.concat(@getFormForAction action, properties[action])
+        
+    form
 
   getFormForAction: (name, action) =>
     actionForm = [

@@ -29,47 +29,52 @@ describe 'MessageSchemaToForm', ->
     describe 'when called with a message schema', ->
       beforeEach ->
         @messageSchema =
-          'subschema':
-            'type': 'string'
-            'enum': [
+          subschema:
+            type: 'string'
+            enum: [
               'getAllPets'
               'createPet'
               'deletePet'
               'getPetById'
             ]
 
-          'getAllPets':
-            'type': 'object'
-            'description': 'Finds all pets in the system'
-            'properties':
-              'status':
-                'description': 'The status to filter by'
-                'type': 'string'
+          getAllPets:
+            type: 'object'
+            description: 'Finds all pets in the system'
+            properties:
+              status:
+                description: 'The status to filter by'
+                type: 'string'
 
-          'createPet':
-            'type': 'object'
+          createPet:
+            type: 'object'
 
-          'deletePet':
-            'type': 'object'
-            'properties': 'id':
-              'description': 'ID of pet to delete'
-              'type': 'integer'
-              'required': true
+          deletePet:
+            type: 'object'
+            properties:
+              id:
+                description: 'ID of pet to delete'
+                type: 'integer'
+                required: true
 
-          'getPetById':
-            'type': 'object'
-            'description': 'Finds the pet by id'
+          getPetById:
+            type: 'object'
+            description: 'Finds the pet by id'
 
         @result = @sut.getForm @messageSchema
 
-      xit 'should contain all the actions', ->
+      it 'should contain all the actions', ->
         actionNames = _.pluck @result, 'key'
-        expect(actionNames).to.contain [
-            "getAllPets"
-            "createPet"
-            "deletePet"
-            "getPetById"
-        ]
+        expect(actionNames).to.contain.all(
+          "getAllPets"
+          "createPet"
+          "deletePet"
+          "getPetById"
+        )
+
+      it 'should return an array with 6 elements', ->
+        expect(@result.length).to.equal 6
+
 
   describe '.getFormForAction ->', ->
     describe 'when called with a name and a simple action', ->
