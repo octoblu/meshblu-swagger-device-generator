@@ -9,39 +9,33 @@ class Swagger2ToMessageSchema
       callback error, null
 
   transform: =>
-    @generateMessageSchema()
+    @generateMessageSchemas()
 
   setupActionIndex: =>
     @actionIndex = {}
+    @pathIndexByAction = {}
     _.each @swagger.paths, (path) =>
       _.each path, (pathAction, pathActionName) =>
         return if pathActionName == 'parameters'
+        @pathIndexByAction[pathAction.operationId] = path
         @actionIndex[pathAction.operationId] = pathAction
 
-  generateMessageSchema: =>
-    actions = @getActions()
-
-    properties =
-      subschema :
-        type: 'string'
-        enum: actions
-
-    _.each @actionIndex, (pathAction, action) =>
-      properties[action] = @getActionProperties pathAction
-
-    type: 'object',
-    properties: properties
+  generateMessageSchemas: =>
+    _.map @actionIndex, (pathAction, actionName) =>
+        @generateMessageSchema actionName, pathAction
 
   getActions: =>
     _.keys @actionIndex
 
-  getActionProperties: (pathAction) =>
-    actionProperties = type: "object"
-    actionProperties.description = pathAction.summary
+  generateMessageSchema: (actionName, pathAction) =>
+    messageSchema =
+      type: "object"
+      title: actionName
+      description: pathAction.summary
+    parameters = _.union pathAction.parameters, @pathIndexByAction[actionName].parameters    
+    messageSchema.properties = @getPropertiesFromParameters parameters
 
-    actionProperties.properties = @getPropertiesFromParameters pathAction.parameters if pathAction.parameters?
-
-    actionProperties
+    messageSchema
 
   fixSchemaProperties: (schemaProperties) =>
     fixedSchemaProperties = {}

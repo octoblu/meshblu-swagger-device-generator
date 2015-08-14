@@ -11,7 +11,7 @@ describe 'Swagger2ToMessageSchema', ->
       it 'should exist', ->
         expect(@sut).to.exist
 
-  describe '.getActionProperties', ->
+  describe '.generateMessageSchema', ->
     describe 'after being constructed with a swagger object', ->
       beforeEach ->
         @petsSwagger = require './swagger/pets-resolved.json'
@@ -21,24 +21,36 @@ describe 'Swagger2ToMessageSchema', ->
             '/pets':
                 get: @petsSwagger.paths['/pets'].get
                 post: @petsSwagger.paths['/pets'].post
+            '/pets/{id}':
+                get: @petsSwagger.paths['/pets/{id}'].get
+                delete: @petsSwagger.paths['/pets/{id}'].delete
+                parameters: [
+                    name: 'id'
+                    type: 'integer'
+                    description: "ID of pet"
+                    required: true
+                    format: 'int64'
+                ]
 
         @sut.setupActionIndex()
 
       it 'should exist', ->
-        expect(@sut.getActionProperties).to.exist
+        expect(@sut.generateMessageSchema).to.exist
 
       describe 'when called with an action with parameters', ->
         beforeEach ->
-          @result = @sut.getActionProperties @sut.swagger.paths['/pets'].get
+          @result = @sut.generateMessageSchema 'getPetById', @sut.swagger.paths['/pets/{id}'].get
 
         it 'should return the appropriate json schema property', ->
           expect(@result).to.deep.equal(
               type: 'object'
-              description: 'Finds all pets in the system'
+              title: 'getPetById'
+              description: 'Finds the pet by id'
               properties:
-                status:
-                  type: 'string'
-                  description: 'The status to filter by'
+                id:
+                  type: 'integer'
+                  description: "ID of pet"
+                  required: true
           )
 
   describe '.fixSchemaProperty', ->
