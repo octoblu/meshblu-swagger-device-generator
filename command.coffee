@@ -11,6 +11,7 @@ commander
   .arguments('[file] swagger file to convert')
   .option '-m, --message-schema [path]', 'Path to the message schema file to output'
   .option '-f, --form [path]',  'Path to the schema form file to output'
+  .option '-c, --coffee [path]',  'Path to the coffee class to output'
   # .option '-p, --proxy-generator [path]',  'Path to the proxy generator file to output'
   # .option '-a, --all',  'generate all json files related to proxy devices'
   .parse process.argv
@@ -33,3 +34,9 @@ if commander.form?
   generator.toForm swaggerPath, (error, form) =>
     return console.error error.message if error?
     fs.writeFileSync formPath, JSON.stringify(form, null, 2)
+
+if commander.coffee?
+  coffeePath = commander.coffee
+  generator.toClass swaggerPath, (error, generatedClass) =>
+    return console.error error.message if error?
+    fs.writeFileSync coffeePath, JSON.stringify(generatedClass, null, 2)

@@ -1,0 +1,3 @@
+class whatever
+  a: =>
+  b: =>
