@@ -1,4 +1,5 @@
 swagger2 = require('swagger-tools').specs.v2
+changeCase = require 'change-case'
 _ = require 'lodash'
 class Swagger2ToMessageSchema
   constructor: (@swaggerFile) ->
@@ -17,23 +18,30 @@ class Swagger2ToMessageSchema
     _.each @swagger.paths, (path) =>
       _.each path, (pathAction, pathActionName) =>
         return if pathActionName == 'parameters'
-        @pathIndexByAction[pathAction.operationId] = path
-        @actionIndex[pathAction.operationId] = pathAction
+        actionName = @getActionName pathAction.operationId
+        @pathIndexByAction[actionName] = path
+        @actionIndex[actionName] = pathAction
 
   generateMessageSchemas: =>
-    messageSchemas = title: @swagger?.info?.title || 'root'
+    messageSchemas = title: @getTitle @swagger?.info?.title || 'root'
     _.each @actionIndex, (pathAction, actionName) =>
         messageSchemas[actionName] = @generateMessageSchema actionName, pathAction
         
     messageSchemas
 
+  getTitle: (title) =>
+    changeCase.titleCase title
+  
+  getActionName: (actionName) =>
+    changeCase.pascalCase actionName
+    
   getActions: =>
     _.keys @actionIndex
 
   generateMessageSchema: (actionName, pathAction) =>
     messageSchema =
       type: "object"
-      title: actionName
+      title: @getTitle actionName
       description: pathAction.summary
       additionalProperties: false
       properties:
@@ -41,6 +49,7 @@ class Swagger2ToMessageSchema
           type: "hidden"
           default: actionName
         options:
+          title: @getTitle actionName
           type: "object"
           properties: []
 
@@ -81,6 +90,7 @@ class Swagger2ToMessageSchema
     property =
       description: parameter.description
       type: parameter.type
+      title: @getTitle parameter.name
 
     unless parameter.schema?
       property.required = parameter.required if parameter.required
