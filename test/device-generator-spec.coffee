@@ -29,12 +29,12 @@ describe 'DeviceGenerator', ->
             type: "object"
             title: "getAllPets"
             description: 'Finds all pets in the system'
-            additionalProperties: false
             properties:
               action:
-                type: 'hidden'
+                type: 'string'
                 default: 'getAllPets'
               options:
+                title: "Get All Pets"
                 type: 'object'
                 properties:
                   status:
@@ -48,12 +48,12 @@ describe 'DeviceGenerator', ->
             type: "object"
             title: "getAllPets"
             description: 'Finds all pets in the system'
-            additionalProperties: false
             properties:
               action:
                 type: 'hidden'
                 default: 'getAllPets'
               options:
+                title: "Get All Pets"
                 type: 'object'
                 properties:
                   status:
@@ -62,7 +62,7 @@ describe 'DeviceGenerator', ->
         getAllPetsSchema = _.findWhere @result, title: 'getAllPets'
         expect(getAllPetsSchema).to.deep.equal getPetByIdProperties
 
-  xdescribe '.toForm ->', ->
+  describe '.toForm ->', ->
     describe 'when called with pet-store v2.0', ->
       beforeEach (done) ->
         @sut = new DeviceGenerator

@@ -33,13 +33,16 @@ class Swagger2ToMessageSchema
     changeCase.titleCase title
   
   getActionName: (actionName) =>
-    changeCase.pascalCase actionName
+    changeCase.camelCase actionName
+  
+  getParameterName: (parameterName) =>
+    changeCase.camelCase parameterName
     
   getActions: =>
     _.keys @actionIndex
 
   generateMessageSchema: (actionName, pathAction) =>
-    messageSchema =
+    messageSchema =      
       type: "object"
       title: @getTitle actionName
       description: pathAction.summary
@@ -48,7 +51,8 @@ class Swagger2ToMessageSchema
         action:
           type: "hidden"
           default: actionName
-        options:
+        options:          
+          additionalProperties: false
           title: @getTitle actionName
           type: "object"
           properties: []
@@ -81,8 +85,9 @@ class Swagger2ToMessageSchema
 
   getPropertiesFromParameters: (parameters) =>
     properties = {}
-    _.each parameters,  (parameter) =>
-      properties[parameter.name] = @getPropertyFromParameter parameter
+    _.each parameters, (parameter) =>
+      parameterName = @getParameterName parameter.name
+      properties[parameterName] = @getPropertyFromParameter parameter
 
     properties
 
