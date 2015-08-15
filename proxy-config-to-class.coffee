@@ -18,15 +18,15 @@ class ProxyConfigToClass
     
   
   generateClass: (functions) =>
-    functions.push new Literal 'theClass'
     proxyClassBody = 
-      new Block([
-          new Value new Literal 'theClass'
+      new Block([          
           new Value (
             new Obj functions        
         )
       ])    
-    new Class proxyClassBody
+    theClass = new Class new Value( new Literal('yo')), null, proxyClassBody
+    theClass
+    
     
   generateFunction: (name, config) =>
     params = @generateParam []

@@ -1,18 +1,19 @@
 (function() {
-  (function() {
+  var yo;
+
+  yo = (function() {
     var createPet, deletePet, getAllPets, getPetById;
 
-    function _Class() {}
+    function yo() {}
 
     ({
       getAllPets = function() {},
       createPet = function() {},
       deletePet = function() {},
-      getPetById = function() {},
-      theClass: theClass
+      getPetById = function() {}
     });
 
-    return _Class;
+    return yo;
 
   })();
 
