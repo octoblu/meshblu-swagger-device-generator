@@ -46,9 +46,10 @@ describe 'Swagger2ToMessageSchema', ->
               type: 'object'
               title: 'getPetById'
               description: 'Finds the pet by id'
+              additionalProperties: false
               properties:
                 action:
-                  type: 'string'
+                  type: 'hidden'
                   default: 'getPetById'
                 options:
                   type: "object"

@@ -1,5 +1,6 @@
-[
-  {
+{
+  "title": "Swagger Petstore",
+  "getAllPets": {
     "type": "object",
     "title": "getAllPets",
     "description": "Finds all pets in the system",
@@ -19,7 +20,7 @@
       }
     }
   },
-  {
+  "createPet": {
     "type": "object",
     "title": "createPet",
     "description": "Creates a new pet",
@@ -93,7 +94,7 @@
       }
     }
   },
-  {
+  "deletePet": {
     "type": "object",
     "title": "deletePet",
     "properties": {
@@ -113,7 +114,7 @@
       }
     }
   },
-  {
+  "getPetById": {
     "type": "object",
     "title": "getPetById",
     "description": "Finds the pet by id",
@@ -134,4 +135,4 @@
       }
     }
   }
-]
+}

@@ -35,9 +35,10 @@ class Swagger2ToMessageSchema
       type: "object"
       title: actionName
       description: pathAction.summary
+      additionalProperties: false
       properties:
         action:
-          type: "string"
+          type: "hidden"
           default: actionName
         options:
           type: "object"

@@ -20,18 +20,19 @@ describe 'DeviceGenerator', ->
         @sut.toMessageSchema './test/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
 
       it 'should return schemas with the correct titles', ->
-        expect(@result).to.be.an 'array'
-        titles = _.pluck @result, 'title'
-        expect(titles).to.deep.equal [ 'getAllPets', 'createPet', 'deletePet', 'getPetById' ]
+        expect(@result).to.be.an 'object'
+        titles = _.keys @result
+        expect(titles).to.deep.equal [ 'title', 'getAllPets', 'createPet', 'deletePet', 'getPetById' ]
 
       it 'should return the correct properties for getAllPets', ->
         getAllPetsProperties =
             type: "object"
             title: "getAllPets"
             description: 'Finds all pets in the system'
+            additionalProperties: false
             properties:
               action:
-                type: 'string'
+                type: 'hidden'
                 default: 'getAllPets'
               options:
                 type: 'object'
@@ -47,9 +48,10 @@ describe 'DeviceGenerator', ->
             type: "object"
             title: "getAllPets"
             description: 'Finds all pets in the system'
+            additionalProperties: false
             properties:
               action:
-                type: 'string'
+                type: 'hidden'
                 default: 'getAllPets'
               options:
                 type: 'object'
@@ -60,16 +62,16 @@ describe 'DeviceGenerator', ->
         getAllPetsSchema = _.findWhere @result, title: 'getAllPets'
         expect(getAllPetsSchema).to.deep.equal getPetByIdProperties
 
-  describe '.toForm ->', ->
+  xdescribe '.toForm ->', ->
     describe 'when called with pet-store v2.0', ->
       beforeEach (done) ->
         @sut = new DeviceGenerator
         @sut.toForm './test/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
 
-      it 'should return the subschema enumeration', ->
-        actionNames = _.pluck @result, 'key'
-        expect(actionNames).to.contain.all(
-          "subschema"
+      it 'should return keys for all the subschema', ->
+        console.log JSON.stringify @result, null, 2
+        actionNames = _.keys @result
+        expect(actionNames).to.contain.all(          
           "getAllPets"
           "createPet"
           "deletePet"

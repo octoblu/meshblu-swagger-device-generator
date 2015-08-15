@@ -11,6 +11,7 @@ class DeviceGenerator
         callback null, swaggerTransformer.transform()
 
   toForm: (filePath, callback=->) =>
+    throw new Error "Form isn't supported for now. It may not be needed."
     @toMessageSchema filePath, (error, messageSchema) =>
       return callback error if error?
       messageSchemaTransformer = new MessageSchemaToForm
