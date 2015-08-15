@@ -26,50 +26,58 @@ describe 'DeviceGenerator', ->
 
       it 'should return the correct properties for getAllPets', ->
         getAllPetsProperties =
-            type: "object"
-            title: "getAllPets"
-            description: 'Finds all pets in the system'
-            properties:
-              action:
-                type: 'string'
-                default: 'getAllPets'
-              options:
-                title: "Get All Pets"
-                type: 'object'
-                properties:
-                  status:
-                    type: "string"
-                    description: "The status to filter by"
-        getAllPetsSchema = _.findWhere @result, title: 'getAllPets'
+          $schema: "http://json-schema.org/draft-04/schema#"
+          additionalProperties: false
+          type: "object"
+          title: "Get All Pets"
+          description: 'Finds all pets in the system'
+          properties:
+            action:
+              type: 'hidden'
+              default: 'getAllPets'
+            options:
+              additionalProperties: false
+              title: "Get All Pets"
+              type: 'object'
+              properties:
+                status:
+                  title: "Status"
+                  type: "string"
+                  description: "The status to filter by"
+                  
+        getAllPetsSchema = @result.getAllPets        
         expect(getAllPetsSchema).to.deep.equal getAllPetsProperties
 
-      it 'should return the correct properties for getPetById', ->
+      it 'should return the correct properties for getAllPets', ->
         getPetByIdProperties =
+            $schema: "http://json-schema.org/draft-04/schema#"
+            additionalProperties: false
             type: "object"
-            title: "getAllPets"
+            title: "Get All Pets"
             description: 'Finds all pets in the system'
             properties:
               action:
                 type: 'hidden'
                 default: 'getAllPets'
               options:
+                additionalProperties: false
                 title: "Get All Pets"
                 type: 'object'
                 properties:
                   status:
                     type: "string"
+                    title: "Status"
                     description: "The status to filter by"
-        getAllPetsSchema = _.findWhere @result, title: 'getAllPets'
+        getAllPetsSchema = @result.getAllPets
         expect(getAllPetsSchema).to.deep.equal getPetByIdProperties
 
-  describe '.toForm ->', ->
+  xdescribe '.toForm ->', ->
     describe 'when called with pet-store v2.0', ->
       beforeEach (done) ->
         @sut = new DeviceGenerator
         @sut.toForm './test/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
 
-      it 'should return keys for all the subschema', ->
-        console.log JSON.stringify @result, null, 2
+      it 'should return keys for all the subschema', ->        
         actionNames = _.keys @result
         expect(actionNames).to.contain.all(          
           "getAllPets"

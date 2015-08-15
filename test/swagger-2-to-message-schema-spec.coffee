@@ -1,5 +1,5 @@
 Swagger2ToMessageSchema = require '../swagger-2-to-message-schema.coffee'
-describe.only 'Swagger2ToMessageSchema', ->
+describe 'Swagger2ToMessageSchema', ->
   it 'should exist', ->
     expect(Swagger2ToMessageSchema).to.exist
 
@@ -42,8 +42,8 @@ describe.only 'Swagger2ToMessageSchema', ->
           @result = @sut.generateMessageSchema 'getPetById', @sut.swagger.paths['/pets/{id}'].get
 
         it 'should return the appropriate json schema property', ->
-          console.log JSON.stringify @result, null, 2
           expect(@result).to.deep.equal(                  
+              $schema: "http://json-schema.org/draft-04/schema#"
               description: 'Finds the pet by id'
               type: "object"
               title: 'Get Pet By Id'

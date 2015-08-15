@@ -23,7 +23,8 @@ class Swagger2ToMessageSchema
         @actionIndex[actionName] = pathAction
 
   generateMessageSchemas: =>
-    messageSchemas = title: @getTitle @swagger?.info?.title || 'root'
+    messageSchemas = 
+      title: @getTitle @swagger?.info?.title || 'root'      
     _.each @actionIndex, (pathAction, actionName) =>
         messageSchemas[actionName] = @generateMessageSchema actionName, pathAction
         
@@ -42,7 +43,8 @@ class Swagger2ToMessageSchema
     _.keys @actionIndex
 
   generateMessageSchema: (actionName, pathAction) =>
-    messageSchema =      
+    messageSchema =
+      $schema: "http://json-schema.org/draft-04/schema#"
       type: "object"
       title: @getTitle actionName
       description: pathAction.summary
