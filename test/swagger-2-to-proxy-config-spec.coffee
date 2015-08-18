@@ -39,14 +39,3 @@ describe 'Swagger2ToProxyConfig', ->
 
       it 'should return a proxy config with body parameters', ->
         expect(@result.body).to.exist
-
-  describe '.generateBaseUrl', ->
-    it 'should exist', ->
-      expect(@sut.generateBaseUrl).to.exist
-
-    describe 'when called with a swagger file containing an http scheme', ->
-      beforeEach ->
-        @result = @sut.generateBaseUrl @petSwagger
-
-      it 'should return the right base url', ->
-        expect(@result).to.equal 'http://petstore.swagger.wordnik.com/api'
