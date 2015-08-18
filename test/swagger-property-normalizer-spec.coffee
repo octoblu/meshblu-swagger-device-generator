@@ -3,21 +3,44 @@ SwaggerPropertyNormalizer = require '../swagger-property-normalizer'
 
 describe 'SwaggerPropertyNormalizer', ->
   beforeEach ->
-    @sut = SwaggerPropertyNormalizer
+    @petsSwagger = require './swagger/pets-resolved.json'
+    @sut = new SwaggerPropertyNormalizer
+
   it 'should exist', ->
     expect(@sut).to.exist
 
-  describe '.generateBaseUrl', ->
+  describe '.getBaseUrl', ->
     it 'should exist', ->
       expect(@sut.getBaseUrl).to.exist
 
     describe 'when called with a swagger file containing an http scheme', ->
       beforeEach ->
-        @result = @sut.getBaseUrl @petSwagger
+        @wingedKoboldSwagger =
+          host: "kobold-wings.org"
+          basePath: "/api"
+          schemes: [
+            "http"
+          ]
+        @sut = new SwaggerPropertyNormalizer @wingedKoboldSwagger
+        @result = @sut.getBaseUrl @wingedKoboldSwagger
 
-      it 'should return the right base url', ->
-        expect(@result).to.equal 'http://petstore.swagger.wordnik.com/api'
-        
+      it 'should return the base url with the http scheme', ->
+        expect(@result).to.equal 'http://kobold-wings.org/api'
+
+      describe 'when called with a swagger file containing an https scheme', ->
+        beforeEach ->
+          @wingedKoboldSwagger =
+            host: "kobold-wings.org"
+            basePath: "/api"
+            schemes: [
+              "http"
+              "https"
+            ]
+          @result = @sut.getBaseUrl @wingedKoboldSwagger
+
+        it 'should return the https-based url', ->
+          expect(@result).to.equal 'https://kobold-wings.org/api'
+
   describe '.fixSchemaProperty', ->
 
     describe 'when called with a simple schema property', ->

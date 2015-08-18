@@ -2,7 +2,6 @@ _ = require 'lodash'
 Swagger2ToProxyConfig = require '../swagger-2-to-proxy-config'
 describe 'Swagger2ToProxyConfig', ->
   beforeEach ->
-    @petsSwagger = require './swagger/pets-resolved.json'
     @sut = new Swagger2ToProxyConfig()
 
   it 'should exist', ->
@@ -30,7 +29,13 @@ describe 'Swagger2ToProxyConfig', ->
 
     describe 'when called with a a swagger config with post data', ->
       beforeEach ->
-        swaggerConfig = @petsSwagger.paths['/pets'].post
+        swaggerConfig =
+          parameters: [
+            name: "monster_type", in: "body"
+            name: "monster_name", in: "body"
+            name: "monster_id", in: "query"
+          ]
+
         @result = @sut.generateProxyConfig(
           "petstore.swagger.wordnik.com/api/pets"
           "POST"
@@ -39,3 +44,10 @@ describe 'Swagger2ToProxyConfig', ->
 
       it 'should return a proxy config with body parameters', ->
         expect(@result.body).to.exist
+
+      it 'should return a proxy config with body parameters that map to message properties', ->
+        messagePropertyMap =
+          monster_type: "monsterType"
+          monster_name: "monsterName"
+
+        expect(@result.body).to.equal messagePropertyMap

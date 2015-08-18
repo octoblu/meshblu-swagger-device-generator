@@ -3,23 +3,45 @@ _ = require 'lodash'
 
 class SwaggerPropertyNormalizer
 
-  @getTitle: (title) =>
+  constructor: (@swagger={}) ->
+    @setupActionIndex()
+
+  setupActionIndex: =>
+    @actionIndex = {}
+    @pathIndexByAction = {}
+    _.each @swagger.paths, (path) =>
+      _.each path, (pathAction, pathActionName) =>
+        return if pathActionName == 'parameters'
+        actionName = @getActionName pathAction.operationId
+        @pathIndexByAction[actionName] = path
+        @actionIndex[actionName] = pathAction
+
+  getTitle: (title) =>
     changeCase.titleCase title
 
-  @getActionName: (actionName) =>
+  getActionName: (actionName) =>
     changeCase.camelCase actionName
 
-  @getParameterName: (parameterName) =>
+  getParameterName: (parameterName) =>
     changeCase.camelCase parameterName
 
-  @fixSchemaProperties: (schemaProperties) =>
+  getBaseUrl: (swagger) =>
+    protocol = @getPreferredProtocol swagger.schemes
+    "#{protocol}://#{swagger.host}#{swagger.basePath}"
+
+  getPreferredProtocol: (protocols) =>
+    return "http" unless protocols?.length > 0
+    return "https" if _.contains protocols, "https"
+    return protocols[0]
+
+  fixSchemaProperties: (schemaProperties) =>
     fixedSchemaProperties = {}
     schemaProperties = schemaProperties.allOf[0].properties if schemaProperties.allOf?
 
     _.mapValues schemaProperties, (schemaProperty) =>
       @fixSchemaProperty schemaProperty
 
-  @fixSchemaProperty: (schemaProperty) =>
+  fixSchemaProperty: (schemaProperty) =>
     fixedSchemaProperty = _.cloneDeep schemaProperty
 
     if fixedSchemaProperty.items?
@@ -33,27 +55,37 @@ class SwaggerPropertyNormalizer
 
     fixedSchemaProperty
 
-  @getPropertiesFromParameters: (parameters) =>
+  getPropertiesFromParameters: (parameters) =>
     properties = {}
     _.each parameters, (parameter) =>
-      parameterName = SwaggerPropertyNormalizer.getParameterName parameter.name
-      properties[parameterName] = SwaggerPropertyNormalizer.getPropertyFromParameter parameter
+      parameterName = @getParameterName parameter.name
+      properties[parameterName] = @getPropertyFromParameter parameter
 
     properties
 
-  @getPropertyFromParameter: (parameter) =>
+  getPropertyFromParameter: (parameter) =>
     property =
       description: parameter.description
       type: parameter.type
-      title: SwaggerPropertyNormalizer.getTitle parameter.name
+      title: @getTitle parameter.name
 
     unless parameter.schema?
       property.required = parameter.required if parameter.required
       return property
 
     property.type = "object"
-    property.properties = SwaggerPropertyNormalizer.fixSchemaProperties parameter.schema
+    property.properties = @fixSchemaProperties parameter.schema
 
     property
-    
+
+  getParametersForAction: (actionName) =>
+    actionParameters =
+      @findAction(actionName, swagger).properties
+    _.union actionParameters, @pathIndexByAction[actionName].parameters
+
+  findAction: (actionName, swagger) =>
+    action = {}
+    _.each swagger.paths, (path) =>
+
+
 module.exports = SwaggerPropertyNormalizer

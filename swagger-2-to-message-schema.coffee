@@ -1,25 +1,13 @@
 _ = require 'lodash'
 SwaggerPropertyNormalizer = require './swagger-property-normalizer'
-class Swagger2ToMessageSchema
-  constructor: (@swagger={}) ->
-    @setupActionIndex()
-
+class Swagger2ToMessageSchema extends SwaggerPropertyNormalizer
+  
   transform: =>
     @generateMessageSchemas()
 
-  setupActionIndex: =>
-    @actionIndex = {}
-    @pathIndexByAction = {}
-    _.each @swagger.paths, (path) =>
-      _.each path, (pathAction, pathActionName) =>
-        return if pathActionName == 'parameters'
-        actionName = SwaggerPropertyNormalizer.getActionName pathAction.operationId
-        @pathIndexByAction[actionName] = path
-        @actionIndex[actionName] = pathAction
-
   generateMessageSchemas: =>
     messageSchemas =
-      title: SwaggerPropertyNormalizer.getTitle @swagger?.info?.title || 'root'
+      title: @getTitle @swagger?.info?.title || 'root'
     _.each @actionIndex, (pathAction, actionName) =>
         messageSchemas[actionName] = @generateMessageSchema actionName, pathAction
 
@@ -29,7 +17,7 @@ class Swagger2ToMessageSchema
     messageSchema =
       $schema: "http://json-schema.org/draft-04/schema#"
       type: "object"
-      title: SwaggerPropertyNormalizer.getTitle actionName
+      title: @getTitle actionName
       description: pathAction.summary
       additionalProperties: false
       properties:
@@ -38,12 +26,12 @@ class Swagger2ToMessageSchema
           default: actionName
         options:
           additionalProperties: false
-          title: SwaggerPropertyNormalizer.getTitle actionName
+          title: @getTitle actionName
           type: "object"
           properties: []
 
-    parameters = _.union pathAction.parameters, @pathIndexByAction[actionName].parameters
-    messageSchema.properties.options.properties = SwaggerPropertyNormalizer.getPropertiesFromParameters parameters
+    parameters = @getParametersForAction(actionName, @swagger)
+    messageSchema.properties.options.properties = @getPropertiesFromParameters parameters
 
     messageSchema
 
