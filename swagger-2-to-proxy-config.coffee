@@ -19,7 +19,7 @@ class Swagger2ToProxyConfig
 
     bodyParams
 
-  generateBaseUrl: =>
+  generateBaseUrl: (swagger) =>
 
 
 module.exports = Swagger2ToProxyConfig

@@ -32,4 +32,28 @@ class SwaggerPropertyNormalizer
       delete fixedSchemaProperty.required
 
     fixedSchemaProperty
+
+  @getPropertiesFromParameters: (parameters) =>
+    properties = {}
+    _.each parameters, (parameter) =>
+      parameterName = SwaggerPropertyNormalizer.getParameterName parameter.name
+      properties[parameterName] = SwaggerPropertyNormalizer.getPropertyFromParameter parameter
+
+    properties
+
+  @getPropertyFromParameter: (parameter) =>
+    property =
+      description: parameter.description
+      type: parameter.type
+      title: SwaggerPropertyNormalizer.getTitle parameter.name
+
+    unless parameter.schema?
+      property.required = parameter.required if parameter.required
+      return property
+
+    property.type = "object"
+    property.properties = SwaggerPropertyNormalizer.fixSchemaProperties parameter.schema
+
+    property
+    
 module.exports = SwaggerPropertyNormalizer

@@ -4,7 +4,6 @@ describe 'Swagger2ToProxyConfig', ->
   beforeEach ->
     @petsSwagger = require './swagger/pets-resolved.json'
     @sut = new Swagger2ToProxyConfig()
-    @sut.swagger = @petsSwagger
 
   it 'should exist', ->
     expect(@sut).to.exist
@@ -47,4 +46,7 @@ describe 'Swagger2ToProxyConfig', ->
 
     describe 'when called with a swagger file containing an http scheme', ->
       beforeEach ->
-        @sut.generateBaseUrl()
+        @result = @sut.generateBaseUrl @petSwagger
+
+      it 'should return the right base url', ->
+        expect(@result).to.equal 'http://petstore.swagger.wordnik.com/api'

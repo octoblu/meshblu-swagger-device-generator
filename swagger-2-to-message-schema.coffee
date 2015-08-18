@@ -43,32 +43,9 @@ class Swagger2ToMessageSchema
           properties: []
 
     parameters = _.union pathAction.parameters, @pathIndexByAction[actionName].parameters
-    messageSchema.properties.options.properties = @getPropertiesFromParameters parameters
+    messageSchema.properties.options.properties = SwaggerPropertyNormalizer.getPropertiesFromParameters parameters
 
     messageSchema
-
-  getPropertiesFromParameters: (parameters) =>
-    properties = {}
-    _.each parameters, (parameter) =>
-      parameterName = SwaggerPropertyNormalizer.getParameterName parameter.name
-      properties[parameterName] = @getPropertyFromParameter parameter
-
-    properties
-
-  getPropertyFromParameter: (parameter) =>
-    property =
-      description: parameter.description
-      type: parameter.type
-      title: SwaggerPropertyNormalizer.getTitle parameter.name
-
-    unless parameter.schema?
-      property.required = parameter.required if parameter.required
-      return property
-
-    property.type = "object"
-    property.properties = SwaggerPropertyNormalizer.fixSchemaProperties parameter.schema
-
-    property
 
 
 
