@@ -4,9 +4,9 @@ _ = require 'lodash'
 class SwaggerPropertyNormalizer
 
   constructor: (@swagger={}) ->
-    @setupActionIndex()
+    @setupIndices()
 
-  setupActionIndex: =>
+  setupIndices: =>
     @actionIndex = {}
     @pathIndexByAction = {}
     _.each @swagger.paths, (path) =>
@@ -79,9 +79,10 @@ class SwaggerPropertyNormalizer
     property
 
   getParametersForAction: (actionName) =>
-    actionParameters =
-      @findAction(actionName, swagger).properties
-    _.union actionParameters, @pathIndexByAction[actionName].parameters
+    _.union(
+      @pathIndexByAction[actionName].parameters
+      @actionIndex[actionName].parameters
+    )
 
   findAction: (actionName, swagger) =>
     action = {}

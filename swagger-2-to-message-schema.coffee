@@ -1,7 +1,7 @@
 _ = require 'lodash'
 SwaggerPropertyNormalizer = require './swagger-property-normalizer'
 class Swagger2ToMessageSchema extends SwaggerPropertyNormalizer
-  
+
   transform: =>
     @generateMessageSchemas()
 
@@ -30,7 +30,7 @@ class Swagger2ToMessageSchema extends SwaggerPropertyNormalizer
           type: "object"
           properties: []
 
-    parameters = @getParametersForAction(actionName, @swagger)
+    parameters = @getParametersForAction actionName
     messageSchema.properties.options.properties = @getPropertiesFromParameters parameters
 
     messageSchema
