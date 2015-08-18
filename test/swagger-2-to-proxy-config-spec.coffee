@@ -29,7 +29,7 @@ describe 'Swagger2ToProxyConfig', ->
       it 'should not return body params', ->
         expect(@result.body).to.not.exist
 
-    xdescribe 'when called with a a swagger config with post data', ->
+    describe 'when called with a a swagger config with post data', ->
       beforeEach ->
         swaggerConfig = @petsSwagger.paths['/pets'].post
         @result = @sut.generateProxyConfig(

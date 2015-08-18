@@ -1,5 +1,5 @@
-changeCase = require 'change-case'
 _ = require 'lodash'
+SwaggerPropertyNormalizer = require './swagger-property-normalizer'
 class Swagger2ToMessageSchema
   constructor: (@swagger={}) ->
     @setupActionIndex()
@@ -13,35 +13,23 @@ class Swagger2ToMessageSchema
     _.each @swagger.paths, (path) =>
       _.each path, (pathAction, pathActionName) =>
         return if pathActionName == 'parameters'
-        actionName = @getActionName pathAction.operationId
+        actionName = SwaggerPropertyNormalizer.getActionName pathAction.operationId
         @pathIndexByAction[actionName] = path
         @actionIndex[actionName] = pathAction
 
   generateMessageSchemas: =>
     messageSchemas =
-      title: @getTitle @swagger?.info?.title || 'root'
+      title: SwaggerPropertyNormalizer.getTitle @swagger?.info?.title || 'root'
     _.each @actionIndex, (pathAction, actionName) =>
         messageSchemas[actionName] = @generateMessageSchema actionName, pathAction
 
     messageSchemas
 
-  getTitle: (title) =>
-    changeCase.titleCase title
-
-  getActionName: (actionName) =>
-    changeCase.camelCase actionName
-
-  getParameterName: (parameterName) =>
-    changeCase.camelCase parameterName
-
-  getActions: =>
-    _.keys @actionIndex
-
   generateMessageSchema: (actionName, pathAction) =>
     messageSchema =
       $schema: "http://json-schema.org/draft-04/schema#"
       type: "object"
-      title: @getTitle actionName
+      title: SwaggerPropertyNormalizer.getTitle actionName
       description: pathAction.summary
       additionalProperties: false
       properties:
@@ -50,7 +38,7 @@ class Swagger2ToMessageSchema
           default: actionName
         options:
           additionalProperties: false
-          title: @getTitle actionName
+          title: SwaggerPropertyNormalizer.getTitle actionName
           type: "object"
           properties: []
 
@@ -59,31 +47,10 @@ class Swagger2ToMessageSchema
 
     messageSchema
 
-  fixSchemaProperties: (schemaProperties) =>
-    fixedSchemaProperties = {}
-    schemaProperties = schemaProperties.allOf[0].properties if schemaProperties.allOf?
-
-    _.mapValues schemaProperties, (schemaProperty) =>
-      @fixSchemaProperty schemaProperty
-
-  fixSchemaProperty: (schemaProperty) =>
-    fixedSchemaProperty = _.cloneDeep schemaProperty
-
-    if fixedSchemaProperty.items?
-      fixedSchemaProperty.items = @fixSchemaProperty fixedSchemaProperty.items
-      delete fixedSchemaProperty.required
-
-    if fixedSchemaProperty.properties?
-      fixedSchemaProperty.type = 'object' unless fixedSchemaProperty.type?
-      fixedSchemaProperty.properties = @fixSchemaProperties schemaProperty.properties
-      delete fixedSchemaProperty.required
-
-    fixedSchemaProperty
-
   getPropertiesFromParameters: (parameters) =>
     properties = {}
     _.each parameters, (parameter) =>
-      parameterName = @getParameterName parameter.name
+      parameterName = SwaggerPropertyNormalizer.getParameterName parameter.name
       properties[parameterName] = @getPropertyFromParameter parameter
 
     properties
@@ -92,14 +59,14 @@ class Swagger2ToMessageSchema
     property =
       description: parameter.description
       type: parameter.type
-      title: @getTitle parameter.name
+      title: SwaggerPropertyNormalizer.getTitle parameter.name
 
     unless parameter.schema?
       property.required = parameter.required if parameter.required
       return property
 
     property.type = "object"
-    property.properties = @fixSchemaProperties parameter.schema
+    property.properties = SwaggerPropertyNormalizer.fixSchemaProperties parameter.schema
 
     property
 

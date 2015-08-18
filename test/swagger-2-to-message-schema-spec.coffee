@@ -1,4 +1,5 @@
 Swagger2ToMessageSchema = require '../swagger-2-to-message-schema.coffee'
+SwaggerPropertyNormalizer = require '../swagger-property-normalizer.coffee'
 describe 'Swagger2ToMessageSchema', ->
   it 'should exist', ->
     expect(Swagger2ToMessageSchema).to.exist
@@ -49,7 +50,7 @@ describe 'Swagger2ToMessageSchema', ->
 
   describe '.fixSchemaProperty', ->
     beforeEach ->
-        @sut = new Swagger2ToMessageSchema()
+        @sut = SwaggerPropertyNormalizer
 
     describe 'when called with a simple schema property', ->
       beforeEach ->
