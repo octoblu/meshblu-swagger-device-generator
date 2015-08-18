@@ -1,13 +1,8 @@
-swagger2 = require('swagger-tools').specs.v2
 changeCase = require 'change-case'
 _ = require 'lodash'
 class Swagger2ToMessageSchema
-  constructor: (@swaggerFile) ->
-
-  init: (callback=->) =>
-    swagger2.resolve @swaggerFile, (error, @swagger) =>
-      @setupActionIndex()
-      callback error, null
+  constructor: (@swagger={}) ->
+    @setupActionIndex()
 
   transform: =>
     @generateMessageSchemas()
@@ -23,22 +18,22 @@ class Swagger2ToMessageSchema
         @actionIndex[actionName] = pathAction
 
   generateMessageSchemas: =>
-    messageSchemas = 
-      title: @getTitle @swagger?.info?.title || 'root'      
+    messageSchemas =
+      title: @getTitle @swagger?.info?.title || 'root'
     _.each @actionIndex, (pathAction, actionName) =>
         messageSchemas[actionName] = @generateMessageSchema actionName, pathAction
-        
+
     messageSchemas
 
   getTitle: (title) =>
     changeCase.titleCase title
-  
+
   getActionName: (actionName) =>
     changeCase.camelCase actionName
-  
+
   getParameterName: (parameterName) =>
     changeCase.camelCase parameterName
-    
+
   getActions: =>
     _.keys @actionIndex
 
@@ -53,7 +48,7 @@ class Swagger2ToMessageSchema
         action:
           type: "hidden"
           default: actionName
-        options:          
+        options:
           additionalProperties: false
           title: @getTitle actionName
           type: "object"

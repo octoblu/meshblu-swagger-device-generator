@@ -15,34 +15,17 @@ describe 'Swagger2ToMessageSchema', ->
     describe 'after being constructed with a swagger object', ->
       beforeEach ->
         @petsSwagger = require './swagger/pets-resolved.json'
-        @sut = new Swagger2ToMessageSchema()
-        @sut.swagger =
-          paths:
-            '/pets':
-                get: @petsSwagger.paths['/pets'].get
-                post: @petsSwagger.paths['/pets'].post
-            '/pets/{id}':
-                get: @petsSwagger.paths['/pets/{id}'].get
-                delete: @petsSwagger.paths['/pets/{id}'].delete
-                parameters: [
-                    name: 'id'
-                    type: 'integer'
-                    description: "ID of pet"
-                    required: true
-                    format: 'int64'
-                ]
-
-        @sut.setupActionIndex()
+        @sut = new Swagger2ToMessageSchema @petsSwagger
 
       it 'should exist', ->
         expect(@sut.generateMessageSchema).to.exist
 
-      describe 'when called with an action with parameters', ->
+      describe 'when called with an action and a swagger path', ->
         beforeEach ->
           @result = @sut.generateMessageSchema 'getPetById', @sut.swagger.paths['/pets/{id}'].get
 
-        it 'should return the appropriate json schema property', ->
-          expect(@result).to.deep.equal(                  
+        it 'should return a proxy config with the correct uri', ->
+          expect(@result).to.deep.equal(
               $schema: "http://json-schema.org/draft-04/schema#"
               description: 'Finds the pet by id'
               type: "object"
@@ -52,7 +35,7 @@ describe 'Swagger2ToMessageSchema', ->
                 action:
                   type: 'hidden'
                   default: 'getPetById'
-                options:                  
+                options:
                   additionalProperties: false
                   title: 'Get Pet By Id'
                   type: "object"

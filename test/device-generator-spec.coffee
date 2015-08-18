@@ -20,7 +20,7 @@ describe 'DeviceGenerator', ->
         @sut.toMessageSchema './test/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
 
       it 'should return schemas with the correct titles', ->
-        expect(@result).to.be.an 'object'
+        expect(@result).to.be.an 'object'        
         titles = _.keys @result
         expect(titles).to.deep.equal [ 'title', 'getAllPets', 'createPet', 'deletePet', 'getPetById' ]
 
@@ -44,8 +44,8 @@ describe 'DeviceGenerator', ->
                   title: "Status"
                   type: "string"
                   description: "The status to filter by"
-                  
-        getAllPetsSchema = @result.getAllPets        
+
+        getAllPetsSchema = @result.getAllPets
         expect(getAllPetsSchema).to.deep.equal getAllPetsProperties
 
       it 'should return the correct properties for getAllPets', ->
@@ -70,18 +70,3 @@ describe 'DeviceGenerator', ->
                     description: "The status to filter by"
         getAllPetsSchema = @result.getAllPets
         expect(getAllPetsSchema).to.deep.equal getPetByIdProperties
-
-  xdescribe '.toForm ->', ->
-    describe 'when called with pet-store v2.0', ->
-      beforeEach (done) ->
-        @sut = new DeviceGenerator
-        @sut.toForm './test/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
-
-      it 'should return keys for all the subschema', ->        
-        actionNames = _.keys @result
-        expect(actionNames).to.contain.all(          
-          "getAllPets"
-          "createPet"
-          "deletePet"
-          "getPetById"
-        )
