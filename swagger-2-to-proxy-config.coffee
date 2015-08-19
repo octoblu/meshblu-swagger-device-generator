@@ -60,4 +60,5 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
 
     parameterNameMap
 
+
 module.exports = Swagger2ToProxyConfig

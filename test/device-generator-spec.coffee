@@ -20,7 +20,7 @@ describe 'DeviceGenerator', ->
         @sut.toMessageSchema './test/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
 
       it 'should return schemas with the correct titles', ->
-        expect(@result).to.be.an 'object'        
+        expect(@result).to.be.an 'object'
         titles = _.keys @result
         expect(titles).to.deep.equal [ 'title', 'getAllPets', 'createPet', 'deletePet', 'getPetById' ]
 
