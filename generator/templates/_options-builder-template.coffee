@@ -2,6 +2,9 @@ class OptionsBuilder
   constructor: ->
 <% _.each(requestOptions, function(requestOption, requestName){%>
   <%=requestName%>: (options, callback=->) =>
+    messagePropertyMap =
+      <%=requestOption.messageNameMap %>
+
     options =
       method: '<%=requestOption.method%>'
       uri: <%-requestOption.uri%>

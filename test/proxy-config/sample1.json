@@ -3,10 +3,12 @@
     "getAllPets": {
       "uri": "\"https://petfinder.com/pets\"",
       "method": "GET",
-      "qs": {
-        "pet_type": "options.petType",
-        "pet_name": "options.petName"
-      }
+      "messageNameMap": {
+        "bandit": "Bandit",
+        "banditCaptain": "bandit_captain"
+      },
+      "body": ["Bandit"],
+      "qs": ["bandit_captain"]
     },
     "createPet": {
       "uri": "\"https://petfinder2.com/pets\"",
