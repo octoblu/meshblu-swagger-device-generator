@@ -8,8 +8,17 @@ class DeviceGenerator
       fs.readFile filePath, 'utf8', (error, swaggerFile) =>
         return callback error if error?
         swagger2.resolve JSON.parse(swaggerFile), (error, swagger) =>
-          return callback error if error?          
+          return callback error if error?
           swaggerTransformer = new Swagger2ToMessageSchema swagger
           callback null, swaggerTransformer.transform()
+
+  toProxyConfig: (filePath, callback=->) =>
+      fs.readFile filePath, 'utf8', (error, swaggerFile) =>
+        return callback error if error?
+        swagger2.resolve JSON.parse(swaggerFile), (error, swagger) =>
+          return callback error if error?
+          swaggerTransformer = new Swagger2ToMessageSchema swagger
+          callback null, swaggerTransformer.transform()
+
 
 module.exports = DeviceGenerator
