@@ -36,6 +36,8 @@ describe 'SwaggerPropertyNormalizer', ->
               "http"
               "https"
             ]
+
+          @sut = new SwaggerPropertyNormalizer @wingedKoboldSwagger
           @result = @sut.getBaseUrl @wingedKoboldSwagger
 
         it 'should return the https-based url', ->
