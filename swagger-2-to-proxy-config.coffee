@@ -36,9 +36,8 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
     return unless bodyParameters?
     bodyParameters
 
-  getParameterNameMap: (actionName) =>
+  getParameterNameMap: (parameters) =>
     parameterNameMap = {}
-    parameters = @getParametersForAction actionName
     _.each parameters, (parameter) =>
       messageName = @getParameterName parameter.name
       parameterNameMap[messageName] = parameter.name if messageName != parameter.name
@@ -55,10 +54,20 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
       parameterNameMap[messageName] = parameterName if messageName != parameterName
 
       if _.isObject value
-        console.log 'value is', value
         _.extend parameterNameMap, @getParameterNameMapFromObject value
 
     parameterNameMap
 
+  getParameterTypeMap: (parameters) =>
+    parameterTypeMap = {}
+
+    queryParams = _.filter parameters, in: 'query'
+    bodyParam = _.find parameters, in: 'body'
+
+    parameterTypeMap.qs = _.pluck queryParams, 'name' if queryParams.length
+
+    parameterTypeMap.body = _.keys bodyParam.schema.properties
+
+    parameterTypeMap
 
 module.exports = Swagger2ToProxyConfig

@@ -66,21 +66,20 @@ describe 'Swagger2ToProxyConfig', ->
   describe '.getParameterNameMap', ->
     describe 'when called with parameters with the names we want', ->
       beforeEach ->
-        @sut.getParametersForAction = sinon.stub().returns [ name: "id" ]
-        @result = @sut.getParameterNameMap 'getPetById'
+        @result = @sut.getParameterNameMap [ name: "id" ]
 
       it 'should return an empty map', ->
         expect(@result).to.deep.equal {}
 
     describe "when called with parameters with the names we don't want", ->
       beforeEach ->
-        @sut.getParametersForAction = sinon.stub().returns [
+        @parameters = [
             { name: "Bandit" }
             { name: "mastiff" }
             { name: "bandit_captain" }
         ]
 
-        @result = @sut.getParameterNameMap 'getPetById'
+        @result = @sut.getParameterNameMap @parameters
 
       it 'should return an empty map', ->
         expect(@result).to.deep.equal {
@@ -90,13 +89,13 @@ describe 'Swagger2ToProxyConfig', ->
 
     describe "when called with parameters with the names we don't want", ->
       beforeEach ->
-        @sut.getParametersForAction = sinon.stub().returns [
+        @parameters = [
             { name: "Bandit" }
             { name: "mastiff" }
             { name: "bandit_captain" }
         ]
 
-        @result = @sut.getParameterNameMap 'getPetById'
+        @result = @sut.getParameterNameMap @parameters
 
       it 'should return an empty map', ->
         expect(@result).to.deep.equal {
@@ -107,7 +106,7 @@ describe 'Swagger2ToProxyConfig', ->
 
     describe "when called with parameters with a schema", ->
       beforeEach ->
-        @sut.getParametersForAction = sinon.stub().returns [
+        @parameters = [
             { name: "Bandit" }
             { name: "mastiff" }
             { name: "bandit_captain" }
@@ -124,7 +123,7 @@ describe 'Swagger2ToProxyConfig', ->
             }
         ]
 
-        @result = @sut.getParameterNameMap 'getPetById'
+        @result = @sut.getParameterNameMap @parameters
 
       it 'should return an empty map', ->
         expect(@result).to.deep.equal {
@@ -136,7 +135,7 @@ describe 'Swagger2ToProxyConfig', ->
 
     describe "when called with parameters with a schema with nested properties", ->
       beforeEach ->
-        @sut.getParametersForAction = sinon.stub().returns [
+        @parameters = [
             { name: "Bandit" }
             { name: "mastiff" }
             { name: "bandit_captain" }
@@ -161,7 +160,7 @@ describe 'Swagger2ToProxyConfig', ->
             }
         ]
 
-        @result = @sut.getParameterNameMap 'getPetById'
+        @result = @sut.getParameterNameMap @parameters
 
       it 'should return an empty map', ->
         expect(@result).to.deep.equal {
@@ -171,3 +170,56 @@ describe 'Swagger2ToProxyConfig', ->
           "braveryLevel": "bravery_level"
           "averageEducationLevel": "average_education_level"
         }
+
+  describe 'getParameterTypeMap', ->
+    describe 'when called with some youtube parameters', ->
+      beforeEach ->
+        @parameters = [
+          { in: "query", name: "part" }
+          { in: "query", name: "onBehalfOfContentOwner" }
+          { in: "query", name: "onBehalfOfContentOwnerChannel" }
+          {
+            in: "body"
+            name: "body"
+            schema:
+              properties:
+                contentDetails:
+                  properties:
+                    itemCount:
+                      type: "integer"
+                  type: "object"
+                etag:
+                  type: "string"
+                id:
+                  type: "string"
+                kind:
+                  type: "string"
+                status:
+                  properties:
+                    privacyStatus:
+                      type: "string"
+                  type: "object"
+              type: "object"
+          }
+        ]
+        @result = @sut.getParameterTypeMap @parameters
+
+      it 'should return an object with qs and body keys', ->
+        expect(@result.qs).to.exist
+        expect(@result.body).to.exist
+
+      it 'should have all the query param names in qs', ->
+        expect(@result.qs).to.deep.equal [
+          "part"
+          "onBehalfOfContentOwner"
+          "onBehalfOfContentOwnerChannel"
+        ]
+
+      it 'should contain all the body params in body', ->
+        expect(@result.body).to.deep.equal [
+          "contentDetails"
+          "etag"
+          "id"
+          "kind"
+          "status"
+        ]

@@ -1,0 +1,59 @@
+[
+  {
+    "in": "query",
+    "name": "part",
+    "schema": null
+  },
+  {
+    "in": "query",
+    "name": "onBehalfOfContentOwner",
+    "schema": null
+  },
+  {
+    "in": "query",
+    "name": "onBehalfOfContentOwnerChannel",
+    "schema": null
+  },
+  {
+    "in": "body",
+    "name": "body",
+    "schema": {
+      "properties": {
+        "contentDetails": {
+          "properties": {
+            "itemCount": {
+              "description": "The number of videos in the playlist.",
+              "format": "uint32",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "etag": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "status": {
+          "properties": {
+            "privacyStatus": {
+              "description": "The playlist's privacy status.",
+              "enum": [
+                "private",
+                "public",
+                "unlisted"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+]
