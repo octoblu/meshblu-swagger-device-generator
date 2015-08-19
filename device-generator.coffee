@@ -20,5 +20,9 @@ class DeviceGenerator
           swaggerTransformer = new Swagger2ToMessageSchema swagger
           callback null, swaggerTransformer.transform()
 
+  resolve: (filePath, callback=->) =>
+    fs.readFile filePath, 'utf8', (error, swaggerFile) =>
+      return callback error if error?
+      swagger2.resolve JSON.parse(swaggerFile), callback
 
 module.exports = DeviceGenerator
