@@ -12,7 +12,7 @@ describe 'Swagger2ToProxyConfig', ->
     it 'should exist', ->
       expect(@sut.generateProxyActionConfig).to.exist
 
-    describe 'when called with an actionName', ->
+    describe 'when called with an action name', ->
       beforeEach ->
         @result = @sut.generateProxyActionConfig 'getPetById'
 
@@ -25,20 +25,9 @@ describe 'Swagger2ToProxyConfig', ->
       it 'should not return body params', ->
         expect(@result.body).to.not.exist
 
-    describe 'when called with a a swagger config with post data', ->
+    describe 'when called with an action name with post data', ->
       beforeEach ->
-        swaggerConfig =
-          parameters: [
-            name: "monster_type", in: "body"
-            name: "monster_name", in: "body"
-            name: "monster_id", in: "query"
-          ]
-
-        @result = @sut.generateProxyActionConfig(
-          "petstore.swagger.wordnik.com/api/pets"
-          "POST"
-          swaggerConfig
-        )
+        @result = @sut.generateProxyActionConfig 'createPet'
 
       it 'should return a proxy config with body parameters', ->
         expect(@result.body).to.exist

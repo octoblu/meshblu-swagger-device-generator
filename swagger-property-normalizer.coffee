@@ -64,22 +64,21 @@ class SwaggerPropertyNormalizer
     properties = {}
     _.each parameters, (parameter) =>
       parameterName = @getParameterName parameter.name
+      property = @getPropertyFromParameter parameter
+      return _.extend(properties, property) if parameter.in == 'body'
       properties[parameterName] = @getPropertyFromParameter parameter
 
     properties
 
   getPropertyFromParameter: (parameter) =>
+    return @fixSchemaProperties parameter.schema if parameter.schema?
+
     property =
       description: parameter.description
       type: parameter.type
       title: @getTitle parameter.name
 
-    unless parameter.schema?
-      property.required = parameter.required if parameter.required
-      return property
-
-    property.type = "object"
-    property.properties = @fixSchemaProperties parameter.schema
+    property.required = parameter.required if parameter.required
 
     property
 

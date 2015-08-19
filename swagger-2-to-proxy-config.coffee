@@ -21,9 +21,8 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
     path.replace /{/g, '#{options.'
 
 
-  getBodyParamMap: (swaggerConfig) =>
-    bodyParams = swaggerConfig.parameters
-
-    bodyParams
+  getBodyParamMap: (actionName) =>
+    parameters = @getParametersForAction actionName
+    bodyParameters = _.filter parameters, in: 'body'
 
 module.exports = Swagger2ToProxyConfig

@@ -43,6 +43,53 @@ describe 'SwaggerPropertyNormalizer', ->
         it 'should return the https-based url', ->
           expect(@result).to.equal 'https://kobold-wings.org/api'
 
+  describe '.getPropertiesFromParameters', ->
+    describe 'when called with a list that contains a body param', ->
+      beforeEach ->
+        postParameters = [
+            {
+              name: "pet"
+              in: "body"
+              description: "The Pet to create"
+              schema:
+                allOf: [
+                  {
+                    properties:
+                      category:
+                        properties:
+                          id:
+                            type: "integer"
+                          name:
+                            type: "string"
+                      id:
+                        description: "unique identifier for the pet"
+                        type: "integer"
+                      name:
+                        type: "string"
+                  }
+                ]
+                required: [
+                  "name"
+                ]
+            }
+          ]
+        @result = @sut.getPropertiesFromParameters postParameters
+
+      it 'should output the correct properties', ->
+        expect(@result).to.deep.equal(
+          category:
+          	properties:
+          		id:
+          			type: "integer"
+          		name:
+          			type: "string"
+          	type: "object"
+          id:
+          	description: "unique identifier for the pet"
+          	type: "integer"
+          name:
+          	type: "string"
+        )
   describe '.fixSchemaProperty', ->
 
     describe 'when called with a simple schema property', ->
