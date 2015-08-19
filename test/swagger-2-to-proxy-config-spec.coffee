@@ -45,8 +45,12 @@ describe 'Swagger2ToProxyConfig', ->
         expect(@result.qs).to.deep.equal messagePropertyMap
 
 
-    xdescribe 'when called with an action name with post data', ->
+    describe 'when called with an action name with post data', ->
       beforeEach ->
+        @petsSwagger.paths['/pets'].post.parameters = [
+          { name: "pet_status", in: "query"}
+          { name: "pet_name", in: "query"}
+        ]
         @result = @sut.generateProxyActionConfig 'createPet'
 
       it 'should return a proxy config with body parameters', ->
@@ -54,7 +58,7 @@ describe 'Swagger2ToProxyConfig', ->
 
       it 'should return a proxy config with body parameters that map to message properties', ->
         messagePropertyMap =
-          monster_type: "monsterType"
-          monster_name: "monsterName"
+          monster_type: "options.monsterType"
+          monster_name: "options.monsterName"
 
         expect(@result.body).to.equal messagePropertyMap

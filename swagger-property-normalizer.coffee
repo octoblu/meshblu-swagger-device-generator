@@ -34,6 +34,9 @@ class SwaggerPropertyNormalizer
     protocol = @getPreferredProtocol @swagger.schemes
     "#{protocol}://#{@swagger.host}#{@swagger.basePath}"
 
+  getActions: =>
+    _.keys @actionIndex
+
   getPreferredProtocol: (protocols) =>
     return "http" unless protocols?.length > 0
     return "https" if _.contains protocols, "https"
