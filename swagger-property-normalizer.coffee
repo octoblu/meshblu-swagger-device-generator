@@ -8,13 +8,18 @@ class SwaggerPropertyNormalizer
 
   setupIndices: =>
     @actionIndex = {}
-    @pathIndexByAction = {}
-    _.each @swagger.paths, (path) =>
-      _.each path, (pathAction, pathActionName) =>
-        return if pathActionName == 'parameters'
-        actionName = @getActionName pathAction.operationId
-        @pathIndexByAction[actionName] = path
-        @actionIndex[actionName] = pathAction
+    @pathConfigByAction = {}
+    @pathByAction = {}
+    @methodByAction = {}
+
+    _.each @swagger.paths, (pathConfig, path) =>
+      _.each pathConfig, (methodConfig, method) =>
+        return if method == 'parameters'
+        actionName = @getActionName methodConfig.operationId
+        @pathByAction[actionName]       = path
+        @methodByAction[actionName]     = method.toUpperCase()
+        @pathConfigByAction[actionName] = pathConfig
+        @actionIndex[actionName]        = methodConfig
 
   getTitle: (title) =>
     changeCase.titleCase title
@@ -25,9 +30,9 @@ class SwaggerPropertyNormalizer
   getParameterName: (parameterName) =>
     changeCase.camelCase parameterName
 
-  getBaseUrl: (swagger) =>
-    protocol = @getPreferredProtocol swagger.schemes
-    "#{protocol}://#{swagger.host}#{swagger.basePath}"
+  getBaseUrl: =>
+    protocol = @getPreferredProtocol @swagger.schemes
+    "#{protocol}://#{@swagger.host}#{@swagger.basePath}"
 
   getPreferredProtocol: (protocols) =>
     return "http" unless protocols?.length > 0
@@ -80,7 +85,7 @@ class SwaggerPropertyNormalizer
 
   getParametersForAction: (actionName) =>
     _.union(
-      @pathIndexByAction[actionName].parameters
+      @pathConfigByAction[actionName].parameters
       @actionIndex[actionName].parameters
     )
 

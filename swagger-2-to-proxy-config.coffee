@@ -1,20 +1,27 @@
 _ = require 'lodash'
+SwaggerPropertyNormalizer = require './swagger-property-normalizer'
 
-class Swagger2ToProxyConfig
+class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
 
-  generateProxyConfig: (path, method, swaggerConfig={})=>
-    newPath = '"' + path.replace(/{/g, '#{options.') + '"'
-
+  generateProxyActionConfig: (actionName)=>
     proxyConfig =
-      uri: newPath
-      method: method.toUpperCase()
+      uri:    '"'  + @getUrlForAction(actionName) + '"'
+      method: @methodByAction[actionName]
 
-    bodyParams = @getBodyParams swaggerConfig
+    bodyParamMap = @getBodyParamMap actionName
+
     proxyConfig.body = bodyParams if bodyParams?
 
     proxyConfig
 
-  getBodyParams: (swaggerConfig) =>
+  getUrlForAction: (actionName) =>
+    methodConfig = @actionIndex[actionName]
+    path = @getBaseUrl() + @pathByAction[actionName]
+
+    path.replace /{/g, '#{options.'
+
+
+  getBodyParamMap: (swaggerConfig) =>
     bodyParams = swaggerConfig.parameters
 
     bodyParams
