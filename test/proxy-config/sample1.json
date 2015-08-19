@@ -1,0 +1,25 @@
+{
+  "requestOptions": {
+    "getAllPets": {
+      "uri": "\"https://petfinder.com/pets\"",
+      "method": "GET",
+      "qs": {
+        "pet_type": "options.petType",
+        "pet_name": "options.petName"
+      }
+    },
+    "createPet": {
+      "uri": "\"https://petfinder2.com/pets\"",
+      "method": "POST",
+      "body": {
+        "pet_type": "options.petType",
+        "pet_name": "options.petName",
+        "pet_attitude": "options.petAttitude"
+      }
+    },
+    "getPet": {
+      "uri": "\"https://petfinder2.com/pets/#{options.petId}\"",
+      "method": "GET"
+    }
+  }
+}
