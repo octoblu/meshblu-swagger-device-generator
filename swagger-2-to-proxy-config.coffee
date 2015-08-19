@@ -66,7 +66,9 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
 
     parameterTypeMap.qs = _.pluck queryParams, 'name' if queryParams.length
 
-    parameterTypeMap.body = _.keys bodyParam.schema.properties
+    properties = bodyParam.schema.properties || bodyParam.schema.allOf?[0]?.properties
+
+    parameterTypeMap.body = _.keys properties
 
     parameterTypeMap
 

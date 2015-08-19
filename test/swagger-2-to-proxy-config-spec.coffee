@@ -223,3 +223,33 @@ describe 'Swagger2ToProxyConfig', ->
           "kind"
           "status"
         ]
+
+
+  describe 'when called with parameters that have allOf in their schemas', ->
+    beforeEach ->
+      @parameters = [{
+        in: "body"
+        name: "pet"
+        schema:
+          allOf: [{
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          }]
+      }]
+      @result = @sut.getParameterTypeMap @parameters
+
+    it 'should contain all the body params in body', ->
+      expect(@result.body).to.deep.equal [
+        "id"
+        "name"              
+      ]
