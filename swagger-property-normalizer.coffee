@@ -28,6 +28,7 @@ class SwaggerPropertyNormalizer
     changeCase.camelCase actionName
 
   getParameterName: (parameterName) =>
+    return parameterName if _.isNumber parameterName
     changeCase.camelCase parameterName
 
   getBaseUrl: =>

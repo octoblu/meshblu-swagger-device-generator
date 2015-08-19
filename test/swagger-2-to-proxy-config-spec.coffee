@@ -45,7 +45,7 @@ describe 'Swagger2ToProxyConfig', ->
         expect(@result.qs).to.deep.equal messagePropertyMap
 
 
-    describe 'when called with an action name with post data', ->
+    xdescribe 'when called with an action name with post data', ->
       beforeEach ->
         @petsSwagger.paths['/pets'].post.parameters = [
           { name: "pet_status", in: "query"}
@@ -62,3 +62,112 @@ describe 'Swagger2ToProxyConfig', ->
           monster_name: "options.monsterName"
 
         expect(@result.body).to.equal messagePropertyMap
+
+  describe '.getParameterNameMap', ->
+    describe 'when called with parameters with the names we want', ->
+      beforeEach ->
+        @sut.getParametersForAction = sinon.stub().returns [ name: "id" ]
+        @result = @sut.getParameterNameMap 'getPetById'
+
+      it 'should return an empty map', ->
+        expect(@result).to.deep.equal {}
+
+    describe "when called with parameters with the names we don't want", ->
+      beforeEach ->
+        @sut.getParametersForAction = sinon.stub().returns [
+            { name: "Bandit" }
+            { name: "mastiff" }
+            { name: "bandit_captain" }
+        ]
+
+        @result = @sut.getParameterNameMap 'getPetById'
+
+      it 'should return an empty map', ->
+        expect(@result).to.deep.equal {
+          "bandit": "Bandit"
+          "banditCaptain": "bandit_captain"
+        }
+
+    describe "when called with parameters with the names we don't want", ->
+      beforeEach ->
+        @sut.getParametersForAction = sinon.stub().returns [
+            { name: "Bandit" }
+            { name: "mastiff" }
+            { name: "bandit_captain" }
+        ]
+
+        @result = @sut.getParameterNameMap 'getPetById'
+
+      it 'should return an empty map', ->
+        expect(@result).to.deep.equal {
+          "bandit": "Bandit"
+          "banditCaptain": "bandit_captain"
+        }
+
+
+    describe "when called with parameters with a schema", ->
+      beforeEach ->
+        @sut.getParametersForAction = sinon.stub().returns [
+            { name: "Bandit" }
+            { name: "mastiff" }
+            { name: "bandit_captain" }
+            { name: "stats", schema:
+                allOf: [
+                  {
+                    properties:
+                      monster_id: true
+                      bravery_level: true
+                      strength: true
+                      dexterity: true
+                  }
+                ]
+            }
+        ]
+
+        @result = @sut.getParameterNameMap 'getPetById'
+
+      it 'should return an empty map', ->
+        expect(@result).to.deep.equal {
+          "bandit": "Bandit"
+          "banditCaptain": "bandit_captain"
+          "monsterId": "monster_id"
+          "braveryLevel": "bravery_level"
+        }
+
+    describe "when called with parameters with a schema with nested properties", ->
+      beforeEach ->
+        @sut.getParametersForAction = sinon.stub().returns [
+            { name: "Bandit" }
+            { name: "mastiff" }
+            { name: "bandit_captain" }
+            { name: "stats", schema:
+                allOf: [
+                  {
+                    properties:
+                      nation:
+                        type: "object"
+                        properties:
+                          population:
+                            type: "integer"
+                          average_education_level:
+                            type: "integer"
+
+                      monster_id: true
+                      bravery_level: true
+                      strength: true
+                      dexterity: true
+                  }
+                ]
+            }
+        ]
+
+        @result = @sut.getParameterNameMap 'getPetById'
+
+      it 'should return an empty map', ->
+        expect(@result).to.deep.equal {
+          "bandit": "Bandit"
+          "banditCaptain": "bandit_captain"
+          "monsterId": "monster_id"
+          "braveryLevel": "bravery_level"
+          "averageEducationLevel": "average_education_level"
+        }
