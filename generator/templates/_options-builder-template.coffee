@@ -4,7 +4,7 @@ class OptionsBuilder
   <%=requestName%>: (options, callback=->) =>
     options =
       method: '<%=requestOption.method%>'
-      uri: <%=requestOption.uri%>
+      uri: <%-requestOption.uri%>
       <% if(requestOption.qs){%>
       qs:
         <% _.each(requestOption.qs, function(messageName, queryName){%><%=queryName%>: <%=messageName%>
