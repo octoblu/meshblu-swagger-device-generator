@@ -40,7 +40,6 @@ class SwaggerPropertyNormalizer
     return protocols[0]
 
   fixSchemaProperties: (schemaProperties) =>
-    fixedSchemaProperties = {}
     schemaProperties = schemaProperties.allOf[0].properties if schemaProperties.allOf?
 
     _.mapValues schemaProperties, (schemaProperty) =>

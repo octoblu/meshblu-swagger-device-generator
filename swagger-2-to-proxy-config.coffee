@@ -7,12 +7,21 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
     proxyConfig =
       uri:    '"'  + @getUrlForAction(actionName) + '"'
       method: @methodByAction[actionName]
+      body:   @getBodyParamsMap actionName
+      qs:     @getQueryParamsMap actionName
 
-    bodyParamMap = @getBodyParamMap actionName
+  getQueryParamsMap: (actionName) =>
+    parameters = @getParametersForAction actionName
+    queryParams = _.filter parameters, in: 'query'
+    return unless queryParams.length > 0
+    @getParamMap queryParams
 
-    proxyConfig.body = bodyParams if bodyParams?
-
-    proxyConfig
+  getParamMap: (params) =>
+    paramMap = {}
+    _.each params, (param) =>
+      paramMap[param.name] = "options.#{@getParameterName param.name}"
+          
+    paramMap
 
   getUrlForAction: (actionName) =>
     methodConfig = @actionIndex[actionName]
@@ -21,8 +30,11 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
     path.replace /{/g, '#{options.'
 
 
-  getBodyParamMap: (actionName) =>
+  getBodyParamsMap: (actionName) =>
     parameters = @getParametersForAction actionName
-    bodyParameters = _.filter parameters, in: 'body'
+    bodyParameters = _.findWhere parameters, in: 'body'
+    return unless bodyParameters?
+    console.log bodyParameters
+    bodyParameters
 
 module.exports = Swagger2ToProxyConfig

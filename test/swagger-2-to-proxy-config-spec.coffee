@@ -25,7 +25,27 @@ describe 'Swagger2ToProxyConfig', ->
       it 'should not return body params', ->
         expect(@result.body).to.not.exist
 
-    describe 'when called with an action name with post data', ->
+    describe 'when called with an action name with query params', ->
+      beforeEach ->
+        @petsSwagger.paths['/pets'].get.parameters = [
+          { name: "pet_status", in: "query"}
+          { name: "pet_name", in: "query"}
+        ]
+
+        @result = @sut.generateProxyActionConfig 'getAllPets'
+
+      it 'should return a proxy config with query parameters', ->
+        expect(@result.qs).to.exist
+
+      it 'should return a proxy config with query parameters that map to message properties', ->
+        messagePropertyMap =
+          pet_status: "options.petStatus"
+          pet_name: "options.petName"
+
+        expect(@result.qs).to.deep.equal messagePropertyMap
+
+
+    xdescribe 'when called with an action name with post data', ->
       beforeEach ->
         @result = @sut.generateProxyActionConfig 'createPet'
 
