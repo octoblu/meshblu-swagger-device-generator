@@ -5,20 +5,21 @@ Swagger2ToMessageSchema = require './swagger-2-to-message-schema'
 
 class DeviceGenerator
   toMessageSchema: (filePath, callback=->) =>
-      fs.readFile filePath, 'utf8', (error, swaggerFile) =>
+    console.log __dirname
+    fs.readFile filePath, 'utf8', (error, swaggerFile) =>
+      return callback error if error?
+      swagger2.resolve JSON.parse(swaggerFile), (error, swagger) =>
         return callback error if error?
-        swagger2.resolve JSON.parse(swaggerFile), (error, swagger) =>
-          return callback error if error?
-          swaggerTransformer = new Swagger2ToMessageSchema swagger
-          callback null, swaggerTransformer.transform()
+        swaggerTransformer = new Swagger2ToMessageSchema swagger
+        callback null, swaggerTransformer.transform()
 
   toProxyConfig: (filePath, callback=->) =>
-      fs.readFile filePath, 'utf8', (error, swaggerFile) =>
+    fs.readFile filePath, 'utf8', (error, swaggerFile) =>
+      return callback error if error?
+      swagger2.resolve JSON.parse(swaggerFile), (error, swagger) =>
         return callback error if error?
-        swagger2.resolve JSON.parse(swaggerFile), (error, swagger) =>
-          return callback error if error?
-          swaggerTransformer = new Swagger2ToMessageSchema swagger
-          callback null, swaggerTransformer.transform()
+        swaggerTransformer = new Swagger2ToMessageSchema swagger
+        callback null, swaggerTransformer.transform()
 
   resolve: (filePath, callback=->) =>
     fs.readFile filePath, 'utf8', (error, swaggerFile) =>

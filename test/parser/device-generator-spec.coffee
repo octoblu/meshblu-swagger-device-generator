@@ -1,4 +1,5 @@
 _ = require 'lodash'
+path = require 'path'
 DeviceGenerator = require '../../parser/device-generator'
 
 describe 'DeviceGenerator', ->
@@ -17,7 +18,12 @@ describe 'DeviceGenerator', ->
     describe 'when called with pet-store v2.0', ->
       beforeEach (done) ->
         @sut = new DeviceGenerator
-        @sut.toMessageSchema './test/samples/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
+        filePath = path.join( __dirname, '../samples/swagger/pet-store-2-0-swagger.json')
+        @sut.toMessageSchema filePath, (@error, @result) => done()
+
+      it 'should not error', ->
+        console.log __dirname
+        expect(@error).to.not.exist
 
       it 'should return schemas with the correct titles', ->
         expect(@result).to.be.an 'object'
