@@ -3,7 +3,7 @@
     "getAllPets": {
       "uri": "\"https://petfinder.com/pets\"",
       "method": "GET",
-      "messageNameMap": {
+      "messagePropertyMap": {
         "bandit": "Bandit",
         "banditCaptain": "bandit_captain"
       },

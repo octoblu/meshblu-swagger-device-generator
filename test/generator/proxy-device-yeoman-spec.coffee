@@ -7,7 +7,7 @@ helpers = require('yeoman-generator').test
 
 ProxyDeviceYeoman = require '../../generator/index'
 
-xdescribe 'app', ->
+describe 'app', ->
   describe 'when called with a proxy-config', ->
     beforeEach (done) ->
       @optionsBuilderPath = path.join os.tmpdir(), '/temp-test/options-builder.coffee'
@@ -19,6 +19,7 @@ xdescribe 'app', ->
         on 'end', done
 
       return
+      
     it 'creates files', ->
       assert.file [
         'options-builder.coffee'

@@ -2,25 +2,15 @@ class OptionsBuilder
   constructor: ->
 <% _.each(requestOptions, function(requestOption, requestName){%>
   <%=requestName%>: (options, callback=->) =>
+    <% if(requestOption.messagePropertyMap){%>
     messagePropertyMap =
-      <%=requestOption.messageNameMap %>
-
-    #@convertTo
-    options =
-      method: '<%=requestOption.method%>'
-      uri: <%-requestOption.uri%>
-      <% if(requestOption.qs){%>
-      qs:
-        <% _.each(requestOption.qs, function(messageName, queryName){%><%=queryName%>: <%=messageName%>
-        <%});%>
-      <%}%>
-      <% if(requestOption.body){%>
-      body:
-        <% _.each(requestOption.body, function(messageName, bodyName){%><%=bodyName%>: <%=messageName%>
-        <%});%>
-      <%}%>
-
+        <%=requestOption.messagePropertyMap %>
+    @convertMessageNames propertyMessageMap
+    <%}%>
     callback null, options
 <%});%>
+
+  convertMessageNames: (messagePropertyMap) =>
+    console.log 'hello!'
 
 module.exports = OptionsBuilder

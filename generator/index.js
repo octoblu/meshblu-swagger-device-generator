@@ -7,12 +7,12 @@ module.exports = yeoman.generators.Base.extend({
     this.argument('proxyConfigFile', {type: String, required: true});
   },
   writing: function() {
+    var proxyConfig = require(this.proxyConfigFile);
     var templateContext = {
       _ : _,
+      requestOptions : proxyConfig.requestOptions      
     };
-    proxyConfig = require(this.proxyConfigFile);
-    templateContext.requestOptions = proxyConfig.requestOptions
-    console.log(JSON.stringify(proxyConfig, null, 2));
+
     this.template('_options-builder-template.coffee', 'options-builder.coffee', templateContext);
   }
 });
