@@ -1,27 +1,20 @@
 _ = require 'lodash'
-class OptionsBuilder
-  constructor: ->
 
-<% _.each(requestOptions, function(requestOption, requestName){%>
+class OptionsBuilder<% _.each(requestOptions, function(requestOption, requestName){%>
   <%=requestName%>: (options, callback=->) =>
-    callback null, options
+    @convert<%=changeCase.upperCaseFirst(requestName)%>Message: (options, callback=->) =><% if(requestOption.messagePropertyMap){%>
+      messagePropertyMap = <% _.each(requestOption.messagePropertyMap, function(messageName, requestName){%>
+        '<%=messageName%>' : '<%=requestName%>'<%});%>
 
-  convert<%=changeCase.upperCaseFirst(requestName)%>Message: (options)=>
-    requestMessage = {}
-    <% if(requestOption.messagePropertyMap){%>
-    messagePropertyMap =<% _.each(requestOption.messagePropertyMap, function(messageName, requestName){%>
-      '<%=messageName%>' : '<%=requestName%>'<%})%>
-
-    options = @convertMessageNames options, messagePropertyMap
-    <%}%><% if(requestOption.body){%>
-    requestMessage.body = @getBodyParams options, requestOption.body
-    <%}%><% if(requestOption.qs){%>
-    requestMessage.qs = @getQueryParams options, requestOption.qs
-    <%}%>
-    requestMessage
+      options = @convertMessageNames options, messagePropertyMap
+  <%}%>
+      requestOptions = <% if(requestOption.body){%>
+        body:<% _.each(requestOption.body, function(bodyParam){%>
+          '<%-bodyParam%>' : options['<%-bodyParam%>']<%});%>
+  <%}%>
+    callback null, requestOptions
 <%});%>
-
-  convertMessageNames: (options, messagePropertyMap) =>
+  @convertMessageNames: (options, messagePropertyMap) =>
     _.transform options, (message, value, name) =>
       name = messagePropertyMap[name] if messagePropertyMap[name]?
       if _.isArray value

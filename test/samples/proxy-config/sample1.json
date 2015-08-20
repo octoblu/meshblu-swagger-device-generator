@@ -13,11 +13,12 @@
     "createPet": {
       "uri": "\"https://petfinder2.com/pets\"",
       "method": "POST",
-      "body": {
-        "pet_type": "options.petType",
-        "pet_name": "options.petName",
-        "pet_attitude": "options.petAttitude"
-      }
+      "messagePropertyMap": {
+        "pet_type": "petType",
+        "pet_name": "petName",
+        "pet_attitude": "petAttitude"
+      },
+      "body": ["pet_type", "pet_name", "pet_attitude"]
     },
     "getPet": {
       "uri": "\"https://petfinder2.com/pets/#{options.petId}\"",

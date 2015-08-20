@@ -16,8 +16,8 @@ describe 'app', ->
       helpers.run(path.join(__dirname, '../../generator')).
         inDir(@optionsBuilderRoot).
         withOptions('skip-install': true).
-        withArguments(['../test/samples/proxy-config/sample1.json']).
-        on 'end', done
+        withArguments(['../test/samples/proxy-config/sample1.json']).on 'end', =>
+          console.log fs.readFileSync @optionsBuilderPath, 'utf8'
 
     afterEach ->
       fs.removeSync @optionsBuilderRoot
@@ -52,6 +52,13 @@ describe 'app', ->
                 bandit: "Bandit"
                 banditCaptain: "bandit_captain"
               }
+          )
+
+        it 'should return a message with the transformed keys', ->
+          expect(@result).to.deep.equal(
+              Bandit: "Ignito Montoya"
+              bandit_captain: "Tyrannosaurus Rex"
+              species: "dog"
           )
 
         it 'should return a message with the transformed keys', ->
