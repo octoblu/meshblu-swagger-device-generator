@@ -18,6 +18,7 @@ describe 'app', ->
         withOptions('skip-install': true).
         withArguments(['../test/samples/proxy-config/sample1.json']).on 'end', =>
           console.log fs.readFileSync @optionsBuilderPath, 'utf8'
+          done()
 
     afterEach ->
       fs.removeSync @optionsBuilderRoot
@@ -68,7 +69,7 @@ describe 'app', ->
               species: "dog"
           )
 
-      xdescribe 'when OptionsBuilder.getAllPets is run', ->
+      describe 'when OptionsBuilder.getAllPets is run', ->
         beforeEach (done) ->
           optionsBuilderFile = fs.readFileSync @optionsBuilderPath, 'utf8'
           payload =
@@ -83,7 +84,7 @@ describe 'app', ->
               pet_name: 'Andrew'
 
           @sut.getAllPets payload, (error, options) =>
-             @result = otions
+             @result = options
              done()
 
         it 'should return the appropriate request parameters', ->
