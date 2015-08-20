@@ -5,6 +5,7 @@ class OptionsBuilder
     messagePropertyMap =
       <%=requestOption.messageNameMap %>
 
+    #@convertTo
     options =
       method: '<%=requestOption.method%>'
       uri: <%-requestOption.uri%>

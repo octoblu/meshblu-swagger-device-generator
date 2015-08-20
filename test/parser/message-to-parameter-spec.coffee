@@ -1,5 +1,5 @@
 _ = require 'lodash'
-MessageToParameter = require '../message-to-parameter'
+MessageToParameter = require '../../parser/message-to-parameter'
 
 describe 'MessageToParameter', ->
   it 'should exist', ->
@@ -70,5 +70,5 @@ describe 'when constructed with a parameter map', ->
         stats: [
           { monster_id: 5, bravery_level: 7 }
           { monster_id: 8, bravery_level: 1 }
-        ]        
+        ]
       )

@@ -1,8 +1,8 @@
 _ = require 'lodash'
-Swagger2ToProxyConfig = require '../swagger-2-to-proxy-config'
+Swagger2ToProxyConfig = require '../../parser/swagger-2-to-proxy-config'
 describe 'Swagger2ToProxyConfig', ->
   beforeEach ->
-    @petsSwagger = require './swagger/pets-resolved.json'
+    @petsSwagger = require '../samples/swagger/pets-resolved.json'
     @sut = new Swagger2ToProxyConfig @petsSwagger
 
   it 'should exist', ->
@@ -251,5 +251,5 @@ describe 'Swagger2ToProxyConfig', ->
     it 'should contain all the body params in body', ->
       expect(@result.body).to.deep.equal [
         "id"
-        "name"              
+        "name"
       ]

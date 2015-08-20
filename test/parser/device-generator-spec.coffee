@@ -1,5 +1,5 @@
 _ = require 'lodash'
-DeviceGenerator = require '../device-generator'
+DeviceGenerator = require '../../parser/device-generator'
 
 describe 'DeviceGenerator', ->
   it 'should exist', ->
@@ -17,7 +17,7 @@ describe 'DeviceGenerator', ->
     describe 'when called with pet-store v2.0', ->
       beforeEach (done) ->
         @sut = new DeviceGenerator
-        @sut.toMessageSchema './test/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
+        @sut.toMessageSchema './test/samples/swagger/pet-store-2-0-swagger.json', (@error, @result) => done()
 
       it 'should return schemas with the correct titles', ->
         expect(@result).to.be.an 'object'

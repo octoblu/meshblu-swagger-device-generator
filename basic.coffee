@@ -1,3 +1,0 @@
-class whatever
-  a: =>
-  b: =>

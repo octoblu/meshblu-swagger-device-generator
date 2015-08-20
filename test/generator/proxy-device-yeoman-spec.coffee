@@ -5,17 +5,17 @@ path = require 'path'
 assert = require('yeoman-generator').assert
 helpers = require('yeoman-generator').test
 
-ProxyDeviceYeoman = require '../generator/index'
+ProxyDeviceYeoman = require '../../generator/index'
 
-describe 'app', ->
+xdescribe 'app', ->
   describe 'when called with a proxy-config', ->
     beforeEach (done) ->
       @optionsBuilderPath = path.join os.tmpdir(), '/temp-test/options-builder.coffee'
 
-      helpers.run(path.join(__dirname, '../generator')).
+      helpers.run(path.join(__dirname, '../../generator')).
         inDir(path.join(os.tmpdir(), './temp-test')).
         withOptions('skip-install': true).
-        withArguments(['../test/proxy-config/sample1.json']).
+        withArguments(['../test/samples/proxy-config/sample1.json']).
         on 'end', done
 
       return

@@ -1,9 +1,9 @@
 _ = require 'lodash'
-SwaggerPropertyNormalizer = require '../swagger-property-normalizer'
+SwaggerPropertyNormalizer = require '../../parser/swagger-property-normalizer'
 
 describe 'SwaggerPropertyNormalizer', ->
-  beforeEach ->
-    @petsSwagger = require './swagger/pets-resolved.json'
+  beforeEach ->    
+    @petsSwagger = require '../samples/swagger/pets-resolved.json'
     @sut = new SwaggerPropertyNormalizer
 
   it 'should exist', ->

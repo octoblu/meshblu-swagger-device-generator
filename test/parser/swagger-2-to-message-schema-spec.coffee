@@ -1,4 +1,4 @@
-Swagger2ToMessageSchema = require '../swagger-2-to-message-schema'
+Swagger2ToMessageSchema = require '../../parser/swagger-2-to-message-schema'
 describe 'Swagger2ToMessageSchema', ->
   it 'should exist', ->
     expect(Swagger2ToMessageSchema).to.exist
@@ -14,7 +14,7 @@ describe 'Swagger2ToMessageSchema', ->
   describe '.generateMessageSchema', ->
     describe 'after being constructed with a swagger object', ->
       beforeEach ->
-        @petsSwagger = require './swagger/pets-resolved.json'
+        @petsSwagger = require '../samples/swagger/pets-resolved.json'
         @sut = new Swagger2ToMessageSchema @petsSwagger
 
       it 'should exist', ->
