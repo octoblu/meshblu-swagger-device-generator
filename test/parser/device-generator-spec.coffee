@@ -22,7 +22,6 @@ describe 'DeviceGenerator', ->
         @sut.toMessageSchema filePath, (@error, @result) => done()
 
       it 'should not error', ->
-        console.log __dirname
         expect(@error).to.not.exist
 
       it 'should return schemas with the correct titles', ->

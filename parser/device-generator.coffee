@@ -5,7 +5,6 @@ Swagger2ToMessageSchema = require './swagger-2-to-message-schema'
 
 class DeviceGenerator
   toMessageSchema: (filePath, callback=->) =>
-    console.log __dirname
     fs.readFile filePath, 'utf8', (error, swaggerFile) =>
       return callback error if error?
       swagger2.resolve JSON.parse(swaggerFile), (error, swagger) =>

@@ -1,5 +1,7 @@
+_ = require 'lodash'
 class OptionsBuilder
   constructor: ->
+
 <% _.each(requestOptions, function(requestOption, requestName){%>
   <%=requestName%>: (options, callback=->) =>
     callback null, options
@@ -20,6 +22,17 @@ class OptionsBuilder
 <%});%>
 
   convertMessageNames: (options, messagePropertyMap) =>
-    console.log JSON.stringify messagePropertyMap, null, 2
+    _.transform options, (message, value, name) =>
+      name = messagePropertyMap[name] if messagePropertyMap[name]?
+      if _.isArray value
+        message[name] = _.map value, @convertMessageNames
+        return true
+
+      if _.isObject value
+        message[name] = @convertMessageNames value
+        return true
+
+      message[name] = value
+      true
 
 module.exports = OptionsBuilder

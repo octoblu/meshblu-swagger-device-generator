@@ -1,5 +1,5 @@
 _ = require 'lodash'
-fs = require 'fs'
+fs = require 'fs-extra'
 os = require 'os'
 path = require 'path'
 assert = require('yeoman-generator').assert
@@ -10,15 +10,17 @@ ProxyDeviceYeoman = require '../../generator/index'
 describe 'app', ->
   describe 'when called with a proxy-config', ->
     beforeEach (done) ->
-      @optionsBuilderPath = path.join os.tmpdir(), '/temp-test/options-builder.coffee'
+      @optionsBuilderRoot = path.join __dirname, 'generated-files'
+      @optionsBuilderPath = path.join @optionsBuilderRoot, 'options-builder.coffee'
 
       helpers.run(path.join(__dirname, '../../generator')).
-        inDir(path.join(os.tmpdir(), './temp-test')).
+        inDir(@optionsBuilderRoot).
         withOptions('skip-install': true).
         withArguments(['../test/samples/proxy-config/sample1.json']).
         on 'end', done
 
-      return
+    afterEach ->
+      fs.removeSync @optionsBuilderRoot
 
     it 'creates files', ->
       assert.file [
@@ -28,16 +30,40 @@ describe 'app', ->
     describe 'when OptionsBuilder is instantiated', ->
       beforeEach ->
         OptionsBuilder = require @optionsBuilderPath
-        @sut = new OptionsBuilder()
+        @sut = new OptionsBuilder
 
       it 'should have getAllPets and createPets as keys', ->
         functions = _.keys @sut
         expect(functions).to.contain 'getAllPets', 'createPet, getPet'
 
+      it 'should have getAllPets and createPets as keys', ->
+        functions = _.keys @sut
+        expect(functions).to.contain 'getAllPets', 'createPet, getPet'
+
+      describe 'when convertMessageNames is called with message options and a map', ->
+        beforeEach ->
+          @result = @sut.convertMessageNames(
+              {
+                bandit: "Ignito Montoya"
+                banditCaptain: "Tyrannosaurus Rex"
+                species: "dog"
+              }
+              {
+                bandit: "Bandit"
+                banditCaptain: "bandit_captain"
+              }
+          )
+
+        it 'should return a message with the transformed keys', ->
+          expect(@result).to.deep.equal(
+              Bandit: "Ignito Montoya"
+              bandit_captain: "Tyrannosaurus Rex"
+              species: "dog"
+          )
+
       xdescribe 'when OptionsBuilder.getAllPets is run', ->
         beforeEach (done) ->
           optionsBuilderFile = fs.readFileSync @optionsBuilderPath, 'utf8'
-          console.log optionsBuilderFile
           payload =
             petType: 'dog'
             petName: 'Andrew'
@@ -50,7 +76,7 @@ describe 'app', ->
               pet_name: 'Andrew'
 
           @sut.getAllPets payload, (error, options) =>
-             @result = options
+             @result = otions
              done()
 
         it 'should return the appropriate request parameters', ->
@@ -58,9 +84,7 @@ describe 'app', ->
 
       xdescribe 'when OptionsBuilder.createPet is run', ->
         beforeEach (done) ->
-
           optionsBuilderFile = fs.readFileSync @optionsBuilderPath, 'utf8'
-          console.log optionsBuilderFile
           payload =
             petType: 'dog'
             petName: 'Andrew'
@@ -84,7 +108,6 @@ describe 'app', ->
       xdescribe 'when OptionsBuilder.getPet is run', ->
         beforeEach (done)->
           optionsBuilderFile = fs.readFileSync @optionsBuilderPath, 'utf8'
-          console.log optionsBuilderFile
           payload =
             petId: 5
 
