@@ -69,21 +69,21 @@ describe 'app', ->
               species: "dog"
           )
 
-      describe 'when OptionsBuilder.getAllPets is run', ->
+      describe 'when OptionsBuilder.createPet is run', ->
         beforeEach (done) ->
-          optionsBuilderFile = fs.readFileSync @optionsBuilderPath, 'utf8'
           payload =
             petType: 'dog'
             petName: 'Andrew'
+            petId: 5
 
           @expectedOptions =
             method: 'GET'
-            uri: 'https://petfinder.com/pets'
+            uri: 'https://petfinder2.com/pets/5'
             qs:
               pet_type: "dog"
               pet_name: 'Andrew'
 
-          @sut.getAllPets payload, (error, options) =>
+          @sut.getPet payload, (error, options) =>
              @result = options
              done()
 

@@ -8,10 +8,14 @@ class OptionsBuilder<% _.each(requestOptions, function(requestOption, requestNam
       options = @convertMessageNames options, messagePropertyMap
   <%}%>
       requestOptions =
-        url: true <% if(requestOption.body){%>
+        uri: <%-requestOption.uri %>
+        method:"<%=requestOption.method %>"<% if(requestOption.body){%>
         body:<% _.each(requestOption.body, function(bodyParam){%>
-          '<%-bodyParam%>' : options['<%-bodyParam%>']<%});%>
-  <%}%>
+          '<%-bodyParam%>' : options['<%-bodyParam%>']<%});}%><% if(requestOption.qs){%>
+        qs:<% _.each(requestOption.qs, function(qsParam){%>
+          '<%-qsParam%>' : options['<%-qsParam%>']<%});}%>
+
+
       callback null, requestOptions
 <%});%>
   #this function is for the generator only. Not necessary for hand crafted, bespoke channels

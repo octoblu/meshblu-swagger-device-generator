@@ -22,7 +22,12 @@
     },
     "getPet": {
       "uri": "\"https://petfinder2.com/pets/#{options.petId}\"",
-      "method": "GET"
+      "method": "GET",
+      "messagePropertyMap": {
+        "pet_type": "petType",
+        "pet_name": "petName"
+      },
+      "qs": ["pet_type", "pet_name"]
     }
   }
 }
