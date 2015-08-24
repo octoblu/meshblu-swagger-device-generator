@@ -4,11 +4,21 @@ SwaggerPropertyNormalizer = require './swagger-property-normalizer'
 class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
 
   generateProxyActionConfig: (actionName)=>
+    messagePropertyMap = _.extend {}, @getBodyParamsMap(actionName), @getQueryParamsMap(actionName)
     proxyConfig =
       uri:    '"'  + @getUrlForAction(actionName) + '"'
+      messagePropertyMap: messagePropertyMap
       method: @methodByAction[actionName]
-      body:   @getBodyParamsMap actionName
-      qs:     @getQueryParamsMap actionName
+      qs: @getQueryParams actionName
+      body: @getBodyParams actionName
+
+  getQueryParams: (actionName) =>
+    parameters = @getParametersForAction actionName
+    _.pluck _.filter(parameters, in: 'query'), 'name'
+
+  getBodyParams: (actionName) =>
+    parameters = @getParametersForAction actionName
+    _.pluck _.filter(parameters, in: 'body'), 'name'
 
   getQueryParamsMap: (actionName) =>
     parameters = @getParametersForAction actionName
@@ -16,10 +26,17 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
     return unless queryParams.length > 0
     @getParamMap queryParams
 
+  getBodyParamsMap: (actionName) =>
+    parameters = @getParametersForAction actionName
+    bodyParams = _.filter parameters, in: 'body'
+    return unless bodyParams.length > 0
+    @getParamMap bodyParams
+
+
   getParamMap: (params) =>
     paramMap = {}
     _.each params, (param) =>
-      paramMap[param.name] = "options.#{@getParameterName param.name}"
+      paramMap[param.name] = @getParameterName param.name
 
     paramMap
 
@@ -28,13 +45,6 @@ class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
     path = @getBaseUrl() + @pathByAction[actionName]
 
     path.replace /{/g, '#{options.'
-
-
-  getBodyParamsMap: (actionName) =>
-    parameters = @getParametersForAction actionName
-    bodyParameters = _.findWhere parameters, in: 'body'
-    return unless bodyParameters?
-    bodyParameters
 
   getParameterNameMap: (parameters) =>
     parameterNameMap = {}

@@ -23,13 +23,15 @@ describe 'Swagger2ToProxyConfig', ->
         expect(@result.method).to.equal 'GET'
 
       it 'should not return body params', ->
-        expect(@result.body).to.not.exist
+        expect(@result.body).to.deep.equal []
 
-    describe 'when called with an action name with query params', ->
+    describe 'when called with an action name with query and body params', ->
       beforeEach ->
         @petsSwagger.paths['/pets'].get.parameters = [
           { name: "pet_status", in: "query"}
           { name: "pet_name", in: "query"}
+          { name: "pet_type", in: "body"}
+          { name: "pet_age", in: "body"}
         ]
 
         @result = @sut.generateProxyActionConfig 'getAllPets'
@@ -37,31 +39,40 @@ describe 'Swagger2ToProxyConfig', ->
       it 'should return a proxy config with query parameters', ->
         expect(@result.qs).to.exist
 
+      it 'should return an array containing the query parameter names', ->
+        expect(@result.qs).to.deep.equal ['pet_status', 'pet_name']
+
+      it 'should return a proxy config with body parameters', ->
+        expect(@result.body).to.deep.equal ['pet_type', 'pet_age']
+
       it 'should return a proxy config with query parameters that map to message properties', ->
         messagePropertyMap =
-          pet_status: "options.petStatus"
-          pet_name: "options.petName"
+          pet_status: "petStatus"
+          pet_name: "petName"
+          pet_type: "petType"
+          pet_age: "petAge"
 
-        expect(@result.qs).to.deep.equal messagePropertyMap
+        expect(@result.messagePropertyMap).to.deep.equal messagePropertyMap
 
 
-    xdescribe 'when called with an action name with post data', ->
+    describe 'when called with an action name with post data', ->
       beforeEach ->
         @petsSwagger.paths['/pets'].post.parameters = [
           { name: "pet_status", in: "query"}
           { name: "pet_name", in: "query"}
         ]
         @result = @sut.generateProxyActionConfig 'createPet'
+        console.log JSON.stringify @result, null, 2
 
       it 'should return a proxy config with body parameters', ->
-        expect(@result.body).to.exist
+        expect(@result.messagePropertyMap).to.exist
 
       it 'should return a proxy config with body parameters that map to message properties', ->
         messagePropertyMap =
-          monster_type: "options.monsterType"
-          monster_name: "options.monsterName"
+          pet_status: "petStatus"
+          pet_name: "petName"
 
-        expect(@result.body).to.equal messagePropertyMap
+        expect(@result.messagePropertyMap).to.deep.equal messagePropertyMap
 
   describe '.getParameterNameMap', ->
     describe 'when called with parameters with the names we want', ->
