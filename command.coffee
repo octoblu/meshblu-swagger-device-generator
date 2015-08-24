@@ -3,8 +3,8 @@
 fs = require 'fs'
 _  = require 'lodash'
 commander = require 'commander'
-debug = require('debug')('device-generator:cli')
-DeviceGenerator = require './device-generator'
+debug = require('debug')('swagger-transformer:cli')
+SwaggerTransformer = require './parser/swagger-transformer'
 
 commander
   .version 1.0
@@ -12,8 +12,6 @@ commander
   .option '-m, --message-schema [path]', 'Path to the message schema file to output'
   .option '-p, --proxy-generator-config [path]',  'Path to the proxy generator config file to output'
   .option '-r, --resolve [path]',  'Path to the resolved swagger file to output'
-  # .option '-p, --proxy-generator [path]',  'Path to the proxy generator file to output'
-  # .option '-a, --all',  'generate all json files related to proxy devices'
   .parse process.argv
 
 
@@ -21,7 +19,7 @@ commander.help() unless commander.args[0]?
 
 swaggerPath = commander.args[0]
 
-generator = new DeviceGenerator
+generator = new SwaggerTransformer
 
 if commander.messageSchema?
   messageSchemaPath = commander.messageSchema

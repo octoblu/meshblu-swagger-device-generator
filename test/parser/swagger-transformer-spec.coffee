@@ -1,15 +1,15 @@
 _ = require 'lodash'
 path = require 'path'
-DeviceGenerator = require '../../parser/device-generator'
+SwaggerTransformer = require '../../parser/swagger-transformer'
 
-describe 'DeviceGenerator', ->
+describe 'SwaggerTransformer', ->
   it 'should exist', ->
-    expect(DeviceGenerator).to.exist
+    expect(SwaggerTransformer).to.exist
 
   describe 'constructor', ->
     describe 'when called', ->
       beforeEach ->
-        @sut = new DeviceGenerator
+        @sut = new SwaggerTransformer
 
       it 'should exist', ->
         expect(@sut).to.exist
@@ -17,7 +17,7 @@ describe 'DeviceGenerator', ->
   describe '.toMessageSchema ->', ->
     describe 'when called with pet-store v2.0', ->
       beforeEach (done) ->
-        @sut = new DeviceGenerator
+        @sut = new SwaggerTransformer
         filePath = path.join( __dirname, '../samples/swagger/pet-store-2-0-swagger.json')
         @sut.toMessageSchema filePath, (@error, @result) => done()
 
