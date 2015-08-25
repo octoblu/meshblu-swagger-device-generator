@@ -8,7 +8,7 @@ helpers = require('yeoman-generator').test
 ProxyDeviceYeoman = require '../../generators/app/index'
 
 describe 'app', ->
-  xdescribe 'when called with a swagger file', ->
+  describe.only 'when called with a swagger file', ->
     beforeEach (done) ->
       @optionsBuilderRoot = path.join __dirname, 'generated-files'
       @optionsBuilderPath = path.join @optionsBuilderRoot, 'options-builder.coffee'
@@ -17,7 +17,7 @@ describe 'app', ->
         inDir(@optionsBuilderRoot).
         withOptions('skip-install': true).
         withPrompts({
-          swaggerFile: '../../test/samples/swagger/pet-store-2-0-swagger.json'
+          swaggerFile: '../../../test/samples/swagger/pet-store-2-0-swagger.json'
         }).on 'end', =>
           console.log fs.readFileSync @optionsBuilderPath, 'utf8'
           done()
@@ -27,8 +27,17 @@ describe 'app', ->
         'options-builder.coffee'
       ]
 
-    # afterEach ->
-    #   fs.removeSync @optionsBuilderRoot
+    afterEach ->
+      fs.removeSync @optionsBuilderRoot
+
+    describe 'when OptionsBuilder is instantiated', ->
+      beforeEach ->
+        OptionsBuilder = require @optionsBuilderPath
+        @sut = new OptionsBuilder
+
+      it 'should have getAllPets and createPets as keys', ->
+        functions = _.keys @sut
+        expect(functions).to.contain 'getAllPets', 'createPet, getPet'
 
   describe 'when called with a proxy-config', ->
     beforeEach (done) ->
@@ -51,6 +60,7 @@ describe 'app', ->
       assert.file [
         'options-builder.coffee'
       ]
+
 
     describe 'when OptionsBuilder is instantiated', ->
       beforeEach ->

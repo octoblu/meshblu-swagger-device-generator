@@ -36,6 +36,8 @@ module.exports = yeoman.generators.Base.extend({
         var self = this;
         return transformer.toProxyConfig(props.swaggerFile, function(error, proxyConfig){
             console.log('hi from the swagger file parser!');
+            console.log('error:', error);
+            console.log(JSON.stringify(proxyConfig, null, 2));
             self.proxyConfig = proxyConfig;
             done();
           });

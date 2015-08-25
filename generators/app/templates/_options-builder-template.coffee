@@ -9,9 +9,9 @@ class OptionsBuilder<% _.each(requestOptions, function(requestOption, requestNam
   <%}%>
       requestOptions =
         uri: <%-requestOption.uri %>
-        method:"<%=requestOption.method %>"<% if(requestOption.body){%>
+        method:"<%=requestOption.method %>"<% if(requestOption.body.length > 0){%>
         body:<% _.each(requestOption.body, function(bodyParam){%>
-          '<%-bodyParam%>' : options['<%-bodyParam%>']<%});}%><% if(requestOption.qs){%>
+          '<%-bodyParam%>' : options['<%-bodyParam%>']<%});}%><% if(requestOption.qs.length > 0){%>
         qs:<% _.each(requestOption.qs, function(qsParam){%>
           '<%-qsParam%>' : options['<%-qsParam%>']<%});}%>
 

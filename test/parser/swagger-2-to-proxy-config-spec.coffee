@@ -8,21 +8,24 @@ describe 'Swagger2ToProxyConfig', ->
   it 'should exist', ->
     expect(@sut).to.exist
 
-  describe '.generateProxyAction', ->
+  describe '.generateProxyConfig', ->
     describe 'when called', ->
       beforeEach ->
         @result = @sut.generateProxyConfig()
 
-        it 'should return an object with requestOptions', ->
-          expect(@result.requestOptions).to.exist
+      it 'should return an object with requestOptions', ->
+        expect(@result.requestOptions).to.exist
 
-        it 'should return an object with requestOptions for each action', ->
-          expect(_.keys @result.requestOptions).to.deep.equal [
-            "getAllPets"
-            "createPet"
-            "deletePet"
-            "getPetById"
-          ]
+      it 'should return an object with requestOptions for each action', ->
+        expect(_.keys @result.requestOptions).to.deep.equal [
+          "getAllPets"
+          "createPet"
+          "deletePet"
+          "getPetById"
+        ]
+
+      it 'should add a uri property to getAllPets', ->        
+        expect(@result.requestOptions.getAllPets.uri).to.exist
 
   describe '.generateProxyActionConfig', ->
     it 'should exist', ->

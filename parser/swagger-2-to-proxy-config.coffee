@@ -3,6 +3,13 @@ SwaggerPropertyNormalizer = require './swagger-property-normalizer'
 
 class Swagger2ToProxyConfig extends SwaggerPropertyNormalizer
 
+  transform: =>
+    @generateProxyConfig()
+    
+  generateProxyConfig: =>
+    requestOptions: _.transform @actionIndex, (transformed, actionData, actionName) =>
+      transformed[actionName] = @generateProxyActionConfig actionName
+
   generateProxyActionConfig: (actionName)=>
     messagePropertyMap = _.extend {}, @getBodyParamsMap(actionName), @getQueryParamsMap(actionName)
     proxyConfig =
