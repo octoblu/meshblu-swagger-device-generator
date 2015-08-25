@@ -5,9 +5,7 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 var _ = require('lodash');
 var yosay = require('yosay');
-var changeCase = require('change-case');
-var SwaggerTransformer = require('../../parser/swagger-transformer');
-
+var SwaggerDeviceGenerator = require('./swagger-device-generator');
 
 module.exports = yeoman.generators.Base.extend({
   constructor: function() {
@@ -16,27 +14,26 @@ module.exports = yeoman.generators.Base.extend({
 
   prompting: function () {
     var self = this;
-    var done = this.async();
+    var done = self.async();
 
-    this.log(yosay(
+    self.log(yosay(
       'Welcome to the Meshblu Swagger Device generator!'
     ));
 
-    if(this.options.proxyConfig) {
-      console.log(this.options.proxyConfig);
-      fs.readFile( path.resolve(this.options.proxyConfig), 'utf8', function(error, file){
-        if(error) {
-          return done(error);
-        }
-        try {
-          self.proxyConfig = JSON.parse(file);
-        } catch(error) {
-          done(error);
-        }
-        done();
-      });
+    var finishPrompting = function(error, proxyConfig){
+      if(error) {
+        return done(error);
+      }
+      self.proxyConfig = proxyConfig
+      done();
+    };
 
-      return;
+    if(self.options.proxyConfig) {
+      return SwaggerDeviceGenerator.loadProxyConfig(self.options.proxyConfig, finishPrompting);
+    }
+
+    if(self.options.swagger) {
+      return SwaggerDeviceGenerator.loadProxyConfigFromSwagger(self.options.swagger, finishPrompting);
     }
 
     var prompts = [];
@@ -45,21 +42,16 @@ module.exports = yeoman.generators.Base.extend({
         message: 'Where is your swagger file?'
     });
 
-    this.prompt(prompts, function (props) {
-        var transformer = new SwaggerTransformer();        
-        return transformer.toProxyConfig(props.swaggerFile, function(error, proxyConfig){
-            self.proxyConfig = proxyConfig;
-            done();
-          });
-    }.bind(this));
+    self.prompt(prompts, function (answers) {
+      SwaggerDeviceGenerator.loadProxyConfigFromSwagger(answers.swaggerFile, finishPrompting);
+    });
   },
 
   writing: function() {
     proxyConfig = this.proxyConfig;
     var templateContext = {
       _ : _,
-      requestOptions : proxyConfig.requestOptions,
-      changeCase: changeCase
+      requestOptions : proxyConfig.requestOptions
     };
 
     this.template('_options-builder-template.coffee', 'options-builder.coffee', templateContext);
