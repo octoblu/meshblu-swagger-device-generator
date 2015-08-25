@@ -48,10 +48,11 @@ describe 'app', ->
 
       helpers.run(path.join(__dirname, '../../generators/app')).
         inDir(@optionsBuilderRoot).
-        withOptions('skip-install': true).
-        withPrompts(
-          proxyConfigFile: '../../test/samples/proxy-config/sample1.json'
-        ).on 'end', =>
+        withOptions({
+        'skip-install': true
+        'proxy-config': '../../samples/proxy-config/sample1.json'
+        }).
+        on 'end', =>
           console.log fs.readFileSync @optionsBuilderPath, 'utf8'
           done()
 
