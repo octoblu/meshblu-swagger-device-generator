@@ -27,8 +27,8 @@ describe 'app', ->
         'options-builder.coffee'
       ]
 
-    afterEach ->
-      fs.removeSync @optionsBuilderRoot
+    # afterEach ->
+    #   fs.removeSync @optionsBuilderRoot
 
   describe 'when called with a proxy-config', ->
     beforeEach (done) ->
@@ -38,7 +38,9 @@ describe 'app', ->
       helpers.run(path.join(__dirname, '../../generators/app')).
         inDir(@optionsBuilderRoot).
         withOptions('skip-install': true).
-        withArguments(['../../test/samples/proxy-config/sample1.json']).on 'end', =>
+        withPrompts(
+          proxyConfigFile: '../../test/samples/proxy-config/sample1.json'
+        ).on 'end', =>
           console.log fs.readFileSync @optionsBuilderPath, 'utf8'
           done()
 

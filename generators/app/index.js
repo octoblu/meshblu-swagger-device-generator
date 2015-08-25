@@ -16,14 +16,19 @@ module.exports = yeoman.generators.Base.extend({
       'Welcome to the Meshblu Swagger Device generator!'
     ));
 
-    var prompts = [];
-    if(!this.proxyConfigFile) {
-      prompts.push({
+    var prompts = [
+      {
         name: 'swaggerFile',
         message: 'Where is your swagger file?'
-      });
-    }
-    this.prompt(prompts, function (props) {
+      },
+      {
+          name: 'proxyConfigFile',
+          message: 'Where is your proxy config file?'
+      }
+    ];
+
+    this.prompt(prompts, function (props) {      
+      this.proxyConfigFile = props.proxyConfigFile;
       generateProxyConfig(props.swaggerFile, done);
     }.bind(this));
   },
