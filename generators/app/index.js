@@ -1,7 +1,9 @@
+require('coffee-script/register');
 var yeoman = require('yeoman-generator');
 var _ = require('lodash');
 var yosay = require('yosay');
 var changeCase = require('change-case');
+var SwaggerTransformer = require('../../parser/swagger-transformer');
 
 module.exports = yeoman.generators.Base.extend({
   constructor: function() {
@@ -27,14 +29,28 @@ module.exports = yeoman.generators.Base.extend({
       }
     ];
 
-    this.prompt(prompts, function (props) {      
-      this.proxyConfigFile = props.proxyConfigFile;
-      generateProxyConfig(props.swaggerFile, done);
+    this.prompt(prompts, function (props) {
+
+      if(props.swaggerFile) {
+        var transformer = new SwaggerTransformer();
+        var self = this;
+        return transformer.toProxyConfig(props.swaggerFile, function(error, proxyConfig){
+            console.log('hi from the swagger file parser!');
+            self.proxyConfig = proxyConfig;
+            done();
+          });
+      }
+
+      if(props.proxyConfigFile) {
+          this.proxyConfig = require(props.proxyConfigFile);
+          done();
+      }
+
     }.bind(this));
   },
 
   writing: function() {
-    var proxyConfig = require(this.proxyConfigFile);
+    proxyConfig = this.proxyConfig;
     var templateContext = {
       _ : _,
       requestOptions : proxyConfig.requestOptions,
