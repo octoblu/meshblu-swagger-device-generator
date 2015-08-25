@@ -8,7 +8,6 @@ var SwaggerTransformer = require('../../parser/swagger-transformer');
 module.exports = yeoman.generators.Base.extend({
   constructor: function() {
     yeoman.generators.Base.apply(this, arguments);
-    this.argument('proxyConfigFile', {type: String, required: false});
   },
 
   prompting: function () {
