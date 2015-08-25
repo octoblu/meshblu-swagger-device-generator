@@ -12,6 +12,10 @@ var SwaggerDeviceGenerator = require('./swagger-device-generator');
 module.exports = yeoman.generators.Base.extend({
   constructor: function() {
     yeoman.generators.Base.apply(this, arguments);
+    this.composeWith('meshblu-connector', { coffee: true }, {
+      local: require.resolve('generator-meshblu-connector'),
+      link: 'strong'
+    });
   },
 
   prompting: function () {
@@ -23,11 +27,21 @@ module.exports = yeoman.generators.Base.extend({
     ));
 
     var finishPrompting = function(error, proxyConfig){
+      self.proxyConfig = proxyConfig;
+
       if(error) {
         return done(error);
       }
-      self.proxyConfig = proxyConfig
-      done();
+
+      if(!self.swaggerFile) {
+        return done();
+      }
+
+      SwaggerDeviceGenerator.generateMessageSchema(self.swaggerFile, function(error, messageSchema){
+        self.messageSchema = messageSchema;
+        done(error);
+      });
+
     };
 
     if(self.options.proxyConfig) {
@@ -46,28 +60,21 @@ module.exports = yeoman.generators.Base.extend({
       self.swaggerFile = answers.swaggerFile;
       SwaggerDeviceGenerator.loadProxyConfigFromSwagger(answers.swaggerFile, finishPrompting);
     });
-
   },
 
   writing: function() {
     var self = this;
     var templateContext = {
       _ : _,
-      requestOptions : this.proxyConfig.requestOptions
+      requestOptions : self.proxyConfig.requestOptions
     };
 
-    this.template('_options-builder-template.coffee', 'options-builder.coffee', templateContext);
-    console.log(self.swaggerFile);
-    if(self.swaggerFile) {
-      var done = self.async();
-      SwaggerDeviceGenerator.generateMessageSchema(self.swaggerFile, function(error, messageSchema){
-        console.log('generated message schema');
-        if(error) {
-          return done(error);
-        }
+    self.template('_options-builder-template.coffee', 'options-builder.coffee', templateContext);
 
-        fs.writeFile('message-schema.json', JSON.stringify(messageSchema, null, 2), done);
-      });
+    if(self.messageSchema) {
+      var done = self.async();
+        fs.writeFile('message-schema.json', JSON.stringify(self.messageSchema, null, 2), done);
     }
+
   }
 });
