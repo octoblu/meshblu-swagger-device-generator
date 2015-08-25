@@ -1,10 +1,12 @@
 require('coffee-script/register');
+
 var fs = require('fs');
 var path = require('path');
+var _ = require('lodash');
 
 var yeoman = require('yeoman-generator');
-var _ = require('lodash');
 var yosay = require('yosay');
+
 var SwaggerDeviceGenerator = require('./swagger-device-generator');
 
 module.exports = yeoman.generators.Base.extend({
@@ -33,6 +35,7 @@ module.exports = yeoman.generators.Base.extend({
     }
 
     if(self.options.swagger) {
+      self.swaggerFile = self.options.swagger;
       return SwaggerDeviceGenerator.loadProxyConfigFromSwagger(self.options.swagger, finishPrompting);
     }
 
@@ -40,18 +43,31 @@ module.exports = yeoman.generators.Base.extend({
       name: 'swaggerFile',
       message: 'Where is your swagger file?'
     }, function (answers) {
+      self.swaggerFile = answers.swaggerFile;
       SwaggerDeviceGenerator.loadProxyConfigFromSwagger(answers.swaggerFile, finishPrompting);
     });
-    
+
   },
 
   writing: function() {
-    proxyConfig = this.proxyConfig;
+    var self = this;
     var templateContext = {
       _ : _,
-      requestOptions : proxyConfig.requestOptions
+      requestOptions : this.proxyConfig.requestOptions
     };
 
     this.template('_options-builder-template.coffee', 'options-builder.coffee', templateContext);
+    console.log(self.swaggerFile);
+    if(self.swaggerFile) {
+      var done = self.async();
+      SwaggerDeviceGenerator.generateMessageSchema(self.swaggerFile, function(error, messageSchema){
+        console.log('generated message schema');
+        if(error) {
+          return done(error);
+        }
+
+        fs.writeFile('message-schema.json', JSON.stringify(messageSchema, null, 2), done);
+      });
+    }
   }
 });

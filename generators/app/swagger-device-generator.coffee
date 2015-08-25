@@ -16,4 +16,8 @@ class SwaggerDeviceGenerator
     transformer = new SwaggerTransformer()
     transformer.toProxyConfig swaggerFilePath, callback
 
+  @generateMessageSchema: (swaggerFilePath, callback=->) ->
+    transformer = new SwaggerTransformer()
+    transformer.toMessageSchema swaggerFilePath, callback
+
 module.exports = SwaggerDeviceGenerator
