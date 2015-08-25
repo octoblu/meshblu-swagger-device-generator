@@ -36,15 +36,13 @@ module.exports = yeoman.generators.Base.extend({
       return SwaggerDeviceGenerator.loadProxyConfigFromSwagger(self.options.swagger, finishPrompting);
     }
 
-    var prompts = [];
-    prompts.push({
-        name: 'swaggerFile',
-        message: 'Where is your swagger file?'
-    });
-
-    self.prompt(prompts, function (answers) {
+    self.prompt({
+      name: 'swaggerFile',
+      message: 'Where is your swagger file?'
+    }, function (answers) {
       SwaggerDeviceGenerator.loadProxyConfigFromSwagger(answers.swaggerFile, finishPrompting);
     });
+    
   },
 
   writing: function() {
