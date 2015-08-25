@@ -5,18 +5,40 @@ path = require 'path'
 assert = require('yeoman-generator').assert
 helpers = require('yeoman-generator').test
 
-ProxyDeviceYeoman = require '../../generator/index'
+ProxyDeviceYeoman = require '../../generators/app/index'
 
 describe 'app', ->
+  xdescribe 'when called with a swagger file', ->
+    beforeEach (done) ->
+      @optionsBuilderRoot = path.join __dirname, 'generated-files'
+      @optionsBuilderPath = path.join @optionsBuilderRoot, 'options-builder.coffee'
+
+      helpers.run(path.join(__dirname, '../../generators/app')).
+        inDir(@optionsBuilderRoot).
+        withOptions('skip-install': true).
+        withPrompts({
+          swaggerFile: '../../test/samples/swagger/pet-store-2-0-swagger.json'
+        }).on 'end', =>
+          console.log fs.readFileSync @optionsBuilderPath, 'utf8'
+          done()
+
+    it 'creates files', ->
+      assert.file [
+        'options-builder.coffee'
+      ]
+
+    afterEach ->
+      fs.removeSync @optionsBuilderRoot
+
   describe 'when called with a proxy-config', ->
     beforeEach (done) ->
       @optionsBuilderRoot = path.join __dirname, 'generated-files'
       @optionsBuilderPath = path.join @optionsBuilderRoot, 'options-builder.coffee'
 
-      helpers.run(path.join(__dirname, '../../generator')).
+      helpers.run(path.join(__dirname, '../../generators/app')).
         inDir(@optionsBuilderRoot).
         withOptions('skip-install': true).
-        withArguments(['../test/samples/proxy-config/sample1.json']).on 'end', =>
+        withArguments(['../../test/samples/proxy-config/sample1.json']).on 'end', =>
           console.log fs.readFileSync @optionsBuilderPath, 'utf8'
           done()
 

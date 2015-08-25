@@ -1,7 +1,11 @@
 {
-  "name": "swagger-device-generator",
+  "name": "generator-meshblu-swagger-device",
   "version": "1.0.0",
   "description": "Generate Meshblu devices from swagger files",
+  "files": [
+    "generators/app",
+    "parser"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "mocha"
@@ -15,7 +19,8 @@
     "iot",
     "swagger",
     "octoblu",
-    "api"
+    "api",
+    "yeoman-generator"
   ],
   "author": "redaphid",
   "license": "MIT",
