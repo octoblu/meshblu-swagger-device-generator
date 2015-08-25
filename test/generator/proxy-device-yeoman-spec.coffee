@@ -8,7 +8,7 @@ helpers = require('yeoman-generator').test
 ProxyDeviceYeoman = require '../../generators/app/index'
 
 describe 'app', ->
-  describe.only 'when called with a swagger file', ->
+  describe 'when called with a swagger file', ->
     beforeEach (done) ->
       @optionsBuilderRoot = path.join __dirname, 'generated-files'
       @optionsBuilderPath = path.join @optionsBuilderRoot, 'options-builder.coffee'
@@ -29,6 +29,8 @@ describe 'app', ->
 
     afterEach ->
       fs.removeSync @optionsBuilderRoot
+      _.each require.cache, (cacheValue, cacheName) =>
+        delete require.cache[cacheName] if _.contains cacheName, 'options-builder'
 
     describe 'when OptionsBuilder is instantiated', ->
       beforeEach ->
@@ -55,6 +57,10 @@ describe 'app', ->
 
     afterEach ->
       fs.removeSync @optionsBuilderRoot
+      _.each require.cache, (cacheValue, cacheName) =>
+        delete require.cache[cacheName] if _.contains cacheName, 'options-builder'
+
+      delete require.cache[@optionsBuilderRoot]
 
     it 'creates files', ->
       assert.file [
